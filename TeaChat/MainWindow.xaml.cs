@@ -20,9 +20,29 @@ namespace TeaChat
     /// </summary>
     public partial class MainWindow : Window
     {
+        int index = 0;
+
+        Window1 echoWindow;
+
         public MainWindow()
         {
             InitializeComponent();
+            echoWindow = new Window1();
+            echoWindow.Show();
+        }
+
+        private void InkCanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
+        {
+            textBlock.Text += "StrokeCollected" + index + '\n';
+            index++;
+
+            ((InkCanvas)((Grid)echoWindow.Content).Children[0]).Strokes.Add(e.Stroke);
+            //MessageBox.Show(e.Stroke.DrawingAttributes.IgnorePressure.ToString());
+        }
+
+        private void menuItemEraseAll_Click(object sender, RoutedEventArgs e)
+        {
+            inkCanvas.Strokes.Clear();
         }
     }
 }
