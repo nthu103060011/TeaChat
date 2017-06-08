@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeaChat"
         mc:Ignorable="d"
-        Title="MainWindow" Height="540" Width="960">
+        Title="MainWindow" Height="540" Width="960" Closed="Window_Closed">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -20,7 +20,21 @@
             <MenuItem Header="設定"/>
         </Menu>
         <Menu Grid.Row="1" Background="{x:Null}" BorderBrush="#FFFFCA00" BorderThickness="0,0,0,1" Padding="0,3" Margin="0,0,5,0">
-            <MenuItem x:Name="menuItemEraseAll" Header="清除" Click="menuItemEraseAll_Click"/>
+            <MenuItem x:Name="menuItemEraseAll" Header="清除畫板" Click="menuItemEraseAll_Click"/>
+            <MenuItem x:Name="menuItemPenColor" Header="畫筆顏色">
+                <MenuItem Header="紅色" Click="menuItemRed_Click" IsCheckable="True"/>
+                <MenuItem Header="綠色" Click="menuItemGreen_Click" IsCheckable="True"/>
+                <MenuItem Header="藍色" Click="menuItemBlue_Click" IsCheckable="True"/>
+                <MenuItem Header="黑色" Click="menuItemBlack_Click" IsCheckable="True" IsChecked="True"/>
+            </MenuItem>
+            <MenuItem x:Name="menuItemPenSize" Header="畫筆粗細">
+                <MenuItem Header="1 dip" Click="menuItem1_Click" IsCheckable="True"/>
+                <MenuItem Header="2 dip" Click="menuItem2_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Header="3 dip" Click="menuItem3_Click" IsCheckable="True"/>
+                <MenuItem Header="4 dip" Click="menuItem4_Click" IsCheckable="True"/>
+                <MenuItem Header="5 dip" Click="menuItem5_Click" IsCheckable="True"/>
+            </MenuItem>
+            <MenuItem x:Name="menuItemAddText" Header="文字方塊" Click="menuItemAddText_Click" />
         </Menu>
         <GridSplitter Grid.Column="0" Grid.Row="1" BorderBrush="Red" Background="#FFB4B4B4" Width="5" Grid.RowSpan="2"/>
         <Canvas Grid.Column="1" Margin="0" Grid.Row="1" Background="#FFA5E3FF" Grid.RowSpan="2">

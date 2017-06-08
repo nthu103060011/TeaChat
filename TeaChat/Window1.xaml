@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Window1" Height="460" Width="790">
     <Grid>
-        <InkCanvas Margin="0" Background="#FFFFFAC7">
+        <InkCanvas x:Name="inkCanvas" Margin="0" Background="#FFFFFAC7">
             <InkCanvas.DefaultDrawingAttributes>
                 <DrawingAttributes Color="Black" FitToCurve="False" Height="2.0031496062992127" IgnorePressure="True" IsHighlighter="False" StylusTip="Ellipse" StylusTipTransform="Identity" Width="2.0031496062992127"/>
             </InkCanvas.DefaultDrawingAttributes>
