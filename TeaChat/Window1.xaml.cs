@@ -48,7 +48,7 @@ namespace TeaChat
             InkCanvas.SetTop(label, Y);
         }
 
-        public void receiveText(string text)
+        public void receiveTextMessage(string text)
         {
             textBlock.Text += "他： " + text + "\n";
         }

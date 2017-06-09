@@ -14,6 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
 using System.IO;
+using System.Net.Sockets;
+using System.Threading;
+using System.Windows.Ink;
 
 namespace TeaChat
 {
@@ -23,10 +26,14 @@ namespace TeaChat
     public partial class MainWindow : Window
     {
         Window1 echoWindow;
+        LogInWindow loginWindow;
 
+        TextBox textBoxInCanvas = new TextBox();
         bool creatingTextBox = false;
         bool editingText = false;
-        TextBox textBoxInCanvas = new TextBox();
+
+        public string myUserName;
+        public List<string> userList;
 
         public MainWindow()
         {
@@ -39,19 +46,104 @@ namespace TeaChat
             textBoxInCanvas.BorderBrush = Brushes.Transparent;
             textBoxInCanvas.AcceptsReturn = true;
         }
-
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.IsEnabled = false;
+            loginWindow = new LogInWindow(this);
+            loginWindow.Show();
+        }
         private void Window_Closed(object sender, EventArgs e)
         {
             echoWindow.Close();
+            loginWindow.Close();
         }
 
+        public void logIn(string username)
+        {
+            loginWindow.Close();
+
+            // TODO: 連線到 server
+            bool connectSuccess = true;
+            //
+
+            if (connectSuccess)
+            {
+                this.IsEnabled = true;
+                // TODO: 新增 thread 去跑 receiveFromServer() 接收 server的訊息
+
+                //
+
+                // TODO: 告訴 server 我的 username
+
+                //
+
+                myUserName = username;
+                labelMyUsername.Header += myUserName;
+
+                // TODO: 接收上線使用者名單 string userList
+                string userListString = "[\"friend1\", \"friend2\", \"friend3\"]";
+                //
+                userList = JsonConvert.DeserializeObject<List<string>>(userListString);
+                listBox.ItemsSource = userList;
+            }
+            else
+            {
+                MessageBox.Show("Server沒開");
+                this.IsEnabled = false;
+                loginWindow = new LogInWindow(this);
+                loginWindow.Show();
+            }
+        }
+
+        private void receiveFromServer()
+        {
+            while(true)
+            {
+                // TODO: 從 socket 接收 string command
+                string command = "Add Stroke";
+                //
+
+                switch(command)
+                {
+                    case "Add Stroke":
+                        // TODO: 從 socket 接收 string drawingAttributesText, string stylusPointsText
+                        string drawingAttributesText, stylusPointsText;
+                        drawingAttributesText = File.ReadAllText("../../../da.txt");
+                        stylusPointsText = File.ReadAllText("../../../sp.txt");
+                        //
+                        receiveStroke(drawingAttributesText, stylusPointsText);
+                        break;
+                    case "Erase All":
+                        receiveErase();
+                        break;
+                    case "Add TextBox":
+                        // TODO: 從 socket 接收 string text, string X, string Y
+                        string textBoxText = "important!!";
+                        string X = "100.23";
+                        string Y = "58.2345";
+                        //
+                        receiveTextBox(textBoxText, Convert.ToDouble(X), Convert.ToDouble(Y));
+                        break;
+                    case "Text Message":
+                        // TODO: 從 socket 接收 string text
+                        string messageText = "hello~";
+                        //
+                        receiveTextMessage(messageText);
+                        break;
+                    default:
+                        MessageBox.Show("Server傳了未知指令");
+                        break;
+                }
+            }
+        }
+
+        #region 畫圖及清除
         private void InkCanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
         {
-            //MessageBox.Show(e.Stroke.DrawingAttributes.Width.ToString() + "," + e.Stroke.DrawingAttributes.Height.ToString());
             string drawingAttributesText = JsonConvert.SerializeObject(e.Stroke.DrawingAttributes);
             string stylusPointsText = JsonConvert.SerializeObject(e.Stroke.StylusPoints);
 
-            // 傳送 drawingAttributesText, stylusPointsText 兩段 string 給 server
+            // TODO: 傳送 drawingAttributesText, stylusPointsText 兩段 string 給 server
             echoWindow.receiveStroke(drawingAttributesText, stylusPointsText);
             //
         }
@@ -61,10 +153,11 @@ namespace TeaChat
             inkCanvas.Strokes.Clear();
             inkCanvas.Children.Clear();
 
-            // 傳送 Erase 命令給 server
+            // TODO: 傳送 Erase 命令給 server
             echoWindow.receiveErase();
             //
         }
+        #endregion
 
         #region 畫筆顏色
         private void menuItemRed_Click(object sender, RoutedEventArgs e)
@@ -134,6 +227,7 @@ namespace TeaChat
         }
         #endregion
 
+        #region 文字方塊
         private void menuItemAddText_Checked(object sender, RoutedEventArgs e)
         {
             creatingTextBox = true;
@@ -177,21 +271,68 @@ namespace TeaChat
                 menuItemAddText.IsChecked = false;
                 editingText = false;
 
-                // 傳送文字方塊 string text 和座標 double X, Y給 server
+                // TODO: 傳送文字方塊 string text 和座標 double X, Y給 server
                 echoWindow.receiveTextBox(text, X, Y);
                 //
             }
         }
+        #endregion
 
+        #region 文字聊天
         private void buttonSendText_Click(object sender, RoutedEventArgs e)
         {
             string text = textBox.Text;
             textBox.Text = "";
             textBlock.Text += "我： " + text + "\n";
 
-            // 傳送文字給 server
-            echoWindow.receiveText(text);
+            // TODO: 傳送文字給 server
+            echoWindow.receiveTextMessage(text);
             //
         }
+
+        private void textBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string text = textBox.Text;
+                textBox.Text = "";
+                textBlock.Text += "我： " + text + "\n";
+
+                // TODO: 傳送文字給 server
+                echoWindow.receiveTextMessage(text);
+                //
+            }
+        }
+        #endregion
+
+
+        #region 從server收到的命令
+        public void receiveStroke(string drawingAttributesText, string stylusPointsText)
+        {
+            DrawingAttributes drawingAttributes = JsonConvert.DeserializeObject<DrawingAttributes>(drawingAttributesText);
+            StylusPointCollection strokeCollection = JsonConvert.DeserializeObject<StylusPointCollection>(stylusPointsText);
+            inkCanvas.Strokes.Add(new Stroke(strokeCollection, drawingAttributes));
+        }
+
+        public void receiveErase()
+        {
+            inkCanvas.Strokes.Clear();
+            inkCanvas.Children.Clear();
+        }
+
+        public void receiveTextBox(string text, double X, double Y)
+        {
+            Label label = new Label();
+            label.Content = text;
+            inkCanvas.Children.Add(label);
+            InkCanvas.SetLeft(label, X);
+            InkCanvas.SetTop(label, Y);
+        }
+
+        public void receiveTextMessage(string text)
+        {
+            textBlock.Text += "他： " + text + "\n";
+        }
+        #endregion
     }
 }

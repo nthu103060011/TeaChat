@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeaChat"
         mc:Ignorable="d"
-        Title="Echo Window" Height="540" Width="960">
+        Title="測試接收視窗" Height="540" Width="960">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

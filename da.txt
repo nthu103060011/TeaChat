@@ -1,0 +1,1 @@
+{"Color":"#FF008000","StylusTip":1,"StylusTipTransform":"Identity","Height":2.0031496062992127,"Width":2.0031496062992127,"FitToCurve":false,"IgnorePressure":false,"IsHighlighter":false}
