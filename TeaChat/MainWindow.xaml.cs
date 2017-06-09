@@ -24,11 +24,20 @@ namespace TeaChat
     {
         Window1 echoWindow;
 
+        bool creatingTextBox = false;
+        bool editingText = false;
+        TextBox textBoxInCanvas = new TextBox();
+
         public MainWindow()
         {
             InitializeComponent();
             echoWindow = new Window1();
             echoWindow.Show();
+            textBoxInCanvas.Width = 100;
+            textBoxInCanvas.Height = 50;
+            textBoxInCanvas.Background = Brushes.Transparent;
+            textBoxInCanvas.BorderBrush = Brushes.Transparent;
+            textBoxInCanvas.AcceptsReturn = true;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -50,6 +59,7 @@ namespace TeaChat
         private void menuItemEraseAll_Click(object sender, RoutedEventArgs e)
         {
             inkCanvas.Strokes.Clear();
+            inkCanvas.Children.Clear();
 
             // 傳送 Erase 命令給 server
             echoWindow.receiveErase();
@@ -124,16 +134,64 @@ namespace TeaChat
         }
         #endregion
 
-        private void menuItemAddText_Click(object sender, RoutedEventArgs e)
+        private void menuItemAddText_Checked(object sender, RoutedEventArgs e)
         {
-            TextBox txtBox = new TextBox();
-            txtBox.Width = 100;
-            txtBox.Height = 50;
-            txtBox.Background = Brushes.Transparent;
-            txtBox.BorderBrush = Brushes.Transparent;
-            txtBox.AcceptsReturn = true;
-            inkCanvas.Children.Add(txtBox);
-            txtBox.Focus();
+            creatingTextBox = true;
+            inkCanvas.EditingMode = InkCanvasEditingMode.None;
+        }
+
+        private void menuItemAddText_Unchecked(object sender, RoutedEventArgs e)
+        {
+            creatingTextBox = false;
+            inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+        }
+
+        private void inkCanvas_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (creatingTextBox)
+            {
+                e.Handled = true;
+                inkCanvas.Children.Add(textBoxInCanvas);
+                InkCanvas.SetLeft(textBoxInCanvas, e.GetPosition((IInputElement)sender).X);
+                InkCanvas.SetTop(textBoxInCanvas, e.GetPosition((IInputElement)sender).Y);
+                textBoxInCanvas.Focus();
+                editingText = true;
+                creatingTextBox = false;
+            }
+            else if (editingText && !textBoxInCanvas.IsMouseOver)
+            {
+                e.Handled = true;
+
+                string text = textBoxInCanvas.Text;
+                double X = InkCanvas.GetLeft(textBoxInCanvas);
+                double Y = InkCanvas.GetTop(textBoxInCanvas);
+                textBoxInCanvas.Text = "";
+                inkCanvas.Children.Remove(textBoxInCanvas);
+
+                Label label = new Label();
+                label.Content = text;
+                inkCanvas.Children.Add(label);
+                InkCanvas.SetLeft(label, X);
+                InkCanvas.SetTop(label, Y);
+
+                menuItemAddText.IsChecked = false;
+                editingText = false;
+
+                // 傳送文字方塊 string text 和座標 double X, Y給 server
+                echoWindow.receiveTextBox(text, X, Y);
+                //
+            }
+        }
+
+        private void buttonSendText_Click(object sender, RoutedEventArgs e)
+        {
+            string text = textBox.Text;
+            textBox.Text = "";
+            textBlock.Text += "我： " + text + "\n";
+
+            // 傳送文字給 server
+            echoWindow.receiveText(text);
+            //
         }
     }
 }

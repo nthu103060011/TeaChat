@@ -36,6 +36,21 @@ namespace TeaChat
         public void receiveErase()
         {
             inkCanvas.Strokes.Clear();
+            inkCanvas.Children.Clear();
+        }
+
+        public void receiveTextBox(string text, double X, double Y)
+        {
+            Label label = new Label();
+            label.Content = text;
+            inkCanvas.Children.Add(label);
+            InkCanvas.SetLeft(label, X);
+            InkCanvas.SetTop(label, Y);
+        }
+
+        public void receiveText(string text)
+        {
+            textBlock.Text += "他： " + text + "\n";
         }
     }
 }

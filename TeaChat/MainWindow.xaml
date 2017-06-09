@@ -5,18 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeaChat"
         mc:Ignorable="d"
-        Title="MainWindow" Height="540" Width="960" Closed="Window_Closed">
+        Title="Main Window" Height="540" Width="960" Closed="Window_Closed">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="3*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Menu Background="#FFFFCA00" Grid.ColumnSpan="2" Padding="0,3" FontSize="14">
+        <Menu Background="#FFFFCA00" Grid.ColumnSpan="3" Padding="0,3" FontSize="14">
             <MenuItem Header="設定"/>
         </Menu>
         <Menu Grid.Row="1" Background="{x:Null}" BorderBrush="#FFFFCA00" BorderThickness="0,0,0,1" Padding="0,3" Margin="0,0,5,0">
@@ -34,17 +36,17 @@
                 <MenuItem Header="4 dip" Click="menuItem4_Click" IsCheckable="True"/>
                 <MenuItem Header="5 dip" Click="menuItem5_Click" IsCheckable="True"/>
             </MenuItem>
-            <MenuItem x:Name="menuItemAddText" Header="文字方塊" Click="menuItemAddText_Click" />
+            <MenuItem x:Name="menuItemAddText" Header="文字方塊" IsCheckable="True" Checked="menuItemAddText_Checked" Unchecked="menuItemAddText_Unchecked" />
         </Menu>
-        <GridSplitter Grid.Column="0" Grid.Row="1" BorderBrush="Red" Background="#FFB4B4B4" Width="5" Grid.RowSpan="2"/>
-        <Canvas Grid.Column="1" Margin="0" Grid.Row="1" Background="#FFA5E3FF" Grid.RowSpan="2">
-            <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="" Width="159" Height="342"/>
-        </Canvas>
-        <InkCanvas x:Name="inkCanvas" Margin="0,0,5,0" Grid.Row="2" Background="#FFFFFAC7" StrokeCollected="InkCanvas_StrokeCollected">
-            <InkCanvas.DefaultDrawingAttributes>
+        <GridSplitter Grid.Column="0" Grid.Row="1" BorderBrush="Red" Background="#FFB4B4B4" Width="5" Grid.RowSpan="4"/>
+        <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="" Background="#FFA5E3FF" Grid.Row="1" Grid.RowSpan="2" Margin="0" Grid.Column="1"/>
+        <TextBox x:Name="textBox" Canvas.Left="15" TextWrapping="Wrap" Canvas.Top="407" Grid.Row="3" Grid.Column="1"/>
+        <InkCanvas x:Name="inkCanvas" Margin="0,0,5,0" Grid.Row="2" Background="#FFFFFAC7" StrokeCollected="InkCanvas_StrokeCollected" PreviewMouseDown="inkCanvas_PreviewMouseDown" Grid.RowSpan="3">
+            <!--<InkCanvas.DefaultDrawingAttributes>
                 <DrawingAttributes Color="Black" FitToCurve="False" Height="2.0031496062992127" IgnorePressure="True" IsHighlighter="False" StylusTip="Ellipse" StylusTipTransform="Identity" Width="2.0031496062992127"/>
-            </InkCanvas.DefaultDrawingAttributes>
+            </InkCanvas.DefaultDrawingAttributes>-->
         </InkCanvas>
+        <Button x:Name="buttonSendText" Content="送出" Grid.Column="1" Margin="0" Grid.Row="4" Background="#FFA5E3FF" Click="buttonSendText_Click"/>
 
     </Grid>
 </Window>
