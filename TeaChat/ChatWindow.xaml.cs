@@ -21,78 +21,39 @@ using System.Windows.Ink;
 namespace TeaChat
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ChatWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ChatWindow : Window
     {
         Window1 echoWindow;
-        LogInWindow loginWindow;
 
         TextBox textBoxInCanvas = new TextBox();
         bool creatingTextBox = false;
         bool editingText = false;
 
         public string myUserName;
-        public List<string> userList;
+        public List<string> chatFriends;
 
-        public MainWindow()
+        public ChatWindow(List<string> chatFriends)
         {
             InitializeComponent();
-            echoWindow = new Window1();
-            echoWindow.Show();
+            this.Hide();
             textBoxInCanvas.Width = 100;
             textBoxInCanvas.Height = 50;
             textBoxInCanvas.Background = Brushes.Transparent;
             textBoxInCanvas.BorderBrush = Brushes.Transparent;
             textBoxInCanvas.AcceptsReturn = true;
-        }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.IsEnabled = false;
-            loginWindow = new LogInWindow(this);
-            loginWindow.Show();
+            
+            this.chatFriends = chatFriends;
+            this.Title = "聊天中 - ";
+            foreach (string friendName in chatFriends)
+            {
+                this.Title += " " + friendName;
+            }
         }
         private void Window_Closed(object sender, EventArgs e)
         {
-            echoWindow.Close();
-            loginWindow.Close();
-        }
-
-        public void logIn(string username)
-        {
-            loginWindow.Close();
-
-            // TODO: 連線到 server
-            bool connectSuccess = true;
-            //
-
-            if (connectSuccess)
-            {
-                this.IsEnabled = true;
-                // TODO: 新增 thread 去跑 receiveFromServer() 接收 server的訊息
-
-                //
-
-                // TODO: 告訴 server 我的 username
-
-                //
-
-                myUserName = username;
-                labelMyUsername.Header += myUserName;
-
-                // TODO: 接收上線使用者名單 string userList
-                string userListString = "[\"friend1\", \"friend2\", \"friend3\"]";
-                //
-                userList = JsonConvert.DeserializeObject<List<string>>(userListString);
-                listBox.ItemsSource = userList;
-            }
-            else
-            {
-                MessageBox.Show("Server沒開");
-                this.IsEnabled = false;
-                loginWindow = new LogInWindow(this);
-                loginWindow.Show();
-            }
+            if (echoWindow != null) echoWindow.Close();
         }
 
         private void receiveFromServer()

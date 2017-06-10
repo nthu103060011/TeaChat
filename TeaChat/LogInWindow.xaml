@@ -5,15 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeaChat"
         mc:Ignorable="d"
-        Title="登入" Height="200
-        " Width="300" WindowStartupLocation="CenterOwner">
-    <Grid Background="#FFA5E3FF">
-        <StackPanel Width="120" Height="135">
+        Title="登入" Width="300" WindowStartupLocation="CenterOwner" Closed="Window_Closed" VerticalAlignment="Top" Height="250">
+    <DockPanel Background="#FFA5E3FF">
+        <StackPanel x:Name="stackPanelLogIn" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,30,0,0" DockPanel.Dock="Top">
             <Label x:Name="label" Content="帳號" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"/>
             <TextBox x:Name="textBoxUsername" HorizontalAlignment="Left" Height="23" Margin="0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
             <Label x:Name="label1" Content="密碼" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"/>
             <TextBox x:Name="textBoxPassword" HorizontalAlignment="Left" Height="23" Margin="0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
-            <Button x:Name="buttonLogIn" HorizontalAlignment="Center" Content="登入" Background="#FF69D0FF" BorderBrush="{x:Null}" Margin="41,10,43,0" Padding="5,3" Click="buttonLogIn_Click"/>
+            <Button x:Name="buttonLogIn" HorizontalAlignment="Center" Content="登入" Background="#FF69D0FF" BorderBrush="{x:Null}" Margin="0,15,0,0" Padding="5,3" Click="buttonLogIn_Click" BorderThickness="0"/>
         </StackPanel>
-    </Grid>
+        <Grid x:Name="gridHome" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="34"/>
+                <RowDefinition/>
+                <RowDefinition Height="32.667"/>
+            </Grid.RowDefinitions>
+            <Label Content="線上使用者" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Margin="38,4,38.667,4" Width="70"></Label>
+            <Label Content="我的聊天室" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="38.333,4" Grid.Column="1" Height="26" Width="70"/>
+            <ListBox x:Name="listBoxOnlineUsers" Margin="5,5,4.667,5" Grid.Row="1" SelectionMode="Multiple"/>
+            <ListBox x:Name="listBoxChatrooms" Margin="5.333,5" Grid.Row="1" Grid.Column="1"/>
+            <Button x:Name="buttonStartChat" HorizontalAlignment="Center" Content="開始聊天" Background="#FF69D0FF" BorderBrush="{x:Null}" Margin="0" Padding="5,3" BorderThickness="0" Grid.Row="2" VerticalAlignment="Center" Click="buttonStartChat_Click"/>
+
+
+        </Grid>
+    </DockPanel>
 </Window>
