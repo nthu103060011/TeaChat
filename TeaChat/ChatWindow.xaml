@@ -5,17 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeaChat"
         mc:Ignorable="d"
-        Title="TeaChat" Height="540" Width="960" Closed="Window_Closed">
+        Title="TeaChatRoom -" Height="540" Width="960" Closed="Window_Closed">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="10*"/>
-            <RowDefinition Height="3*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
@@ -26,10 +23,9 @@
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
             <MenuItem Header="設定"/>
-            <MenuItem x:Name="labelMyUsername" Header="我的帳號：" HorizontalAlignment="Right" IsEnabled="False" />
+            <MenuItem x:Name="labelFriends" Header="聊天中：" HorizontalAlignment="Right" IsEnabled="False" />
         </Menu>
-        <GridSplitter Grid.Row="1" Background="#FFB4B4B4" Width="5" Grid.RowSpan="4"/>
-        <Menu Grid.Row="1" Background="{x:Null}" BorderBrush="#FFFFCA00" BorderThickness="0,0,0,1" Padding="0,3" Margin="0,0,5,0" Grid.Column="1">
+        <Menu Grid.Row="1" Background="{x:Null}" BorderBrush="#FFFFCA00" BorderThickness="0,0,0,1" Padding="0,3" Margin="0,0,5,0">
             <MenuItem x:Name="menuItemEraseAll" Header="清除畫板" Click="menuItemEraseAll_Click"/>
             <MenuItem x:Name="menuItemPenColor" Header="畫筆顏色">
                 <MenuItem Header="紅色" Click="menuItemRed_Click" IsCheckable="True"/>
@@ -46,24 +42,17 @@
             </MenuItem>
             <MenuItem x:Name="menuItemAddText" Header="文字方塊" IsCheckable="True" Checked="menuItemAddText_Checked" Unchecked="menuItemAddText_Unchecked" />
         </Menu>
-        <GridSplitter Grid.Column="1" Grid.Row="1" Background="#FFB4B4B4" Width="5" Grid.RowSpan="4"/>
-        <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="" Grid.Row="2" Margin="0" Grid.Column="2"/>
-        <TextBox x:Name="textBox" Canvas.Left="15" TextWrapping="Wrap" Canvas.Top="407" Grid.Row="3" Grid.Column="2" PreviewKeyDown="textBox_PreviewKeyDown"/>
-        <InkCanvas x:Name="inkCanvas" Margin="0,0,5,0" Grid.Row="2" Background="#FFFFFAC7" StrokeCollected="InkCanvas_StrokeCollected" PreviewMouseDown="inkCanvas_PreviewMouseDown" Grid.RowSpan="3" Grid.Column="1">
+        <GridSplitter Grid.Row="1" Background="#FFB4B4B4" Width="5" Grid.RowSpan="4"/>
+        <InkCanvas x:Name="inkCanvas" Margin="0,0,5,0" Grid.Row="2" Background="#FFFFFAC7" StrokeCollected="InkCanvas_StrokeCollected" PreviewMouseDown="inkCanvas_PreviewMouseDown" Grid.RowSpan="3">
             <!--<InkCanvas.DefaultDrawingAttributes>
                 <DrawingAttributes Color="Black" FitToCurve="False" Height="2.0031496062992127" IgnorePressure="True" IsHighlighter="False" StylusTip="Ellipse" StylusTipTransform="Identity" Width="2.0031496062992127"/>
             </InkCanvas.DefaultDrawingAttributes>-->
         </InkCanvas>
-        <Button x:Name="buttonSendText" Content="送出" Grid.Column="2" Margin="0" Grid.Row="4" Background="#FFA5E3FF" Click="buttonSendText_Click" BorderBrush="{x:Null}" BorderThickness="0"/>
-        <TextBlock Margin="0,0,5,0" Grid.Row="1" Background="#FFA5E3FF" Padding="7,0,0,0">
-            <Run Text="線上使用者"/>
-            <InlineUIContainer BaselineAlignment="Center">
-                <Button x:Name="button" Content="+" Background="{x:Null}" BorderBrush="{x:Null}" Margin="3,0,0,0" Width="18" FontFamily="Impact" FontWeight="Bold" FontSize="16" Foreground="#FF00AFFF"/>
-            </InlineUIContainer>
-        </TextBlock>
-        <ListBox x:Name="listBox" Margin="0,0,4.8,0" Grid.Row="2" Grid.RowSpan="3" BorderBrush="{x:Null}" BorderThickness="0"/>
-        <StackPanel Grid.Column="2" Margin="0" Grid.Row="1" Background="#FFA5E3FF" Orientation="Horizontal">
-            <Button x:Name="button1" Content="視訊通話" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,0,0,0"/>
+        <Button x:Name="button1" Content="視訊通話" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Grid.Row="1" Grid.Column="1"/>
+        <StackPanel Grid.Column="2" Margin="0" Grid.Row="2" Background="#FFA5E3FF" Grid.RowSpan="2">
+            <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="" Height="364"/>
+            <TextBox x:Name="textBox" TextWrapping="Wrap" PreviewKeyDown="textBox_PreviewKeyDown" VerticalAlignment="Bottom" Height="70"/>
+            <Button x:Name="buttonSendText" Content="送出" Background="#FFA5E3FF" Click="buttonSendText_Click" BorderBrush="{x:Null}" BorderThickness="0" Margin="0" ClipToBounds="True" Padding="1,5"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -25,16 +25,17 @@ namespace TeaChat
     /// </summary>
     public partial class ChatWindow : Window
     {
-        Window1 echoWindow;
+        Window1 echoWindow = new Window1();
+        LogInWindow homeWindow;
 
         TextBox textBoxInCanvas = new TextBox();
         bool creatingTextBox = false;
         bool editingText = false;
 
         public string myUserName;
-        public List<string> chatFriends;
+        private List<string> chatFriends;
 
-        public ChatWindow(List<string> chatFriends)
+        public ChatWindow(List<string> chatFriends, LogInWindow homeWindow)
         {
             InitializeComponent();
             this.Hide();
@@ -43,59 +44,20 @@ namespace TeaChat
             textBoxInCanvas.Background = Brushes.Transparent;
             textBoxInCanvas.BorderBrush = Brushes.Transparent;
             textBoxInCanvas.AcceptsReturn = true;
-            
+
+            this.homeWindow = homeWindow;
             this.chatFriends = chatFriends;
-            this.Title = "聊天中 - ";
             foreach (string friendName in chatFriends)
             {
                 this.Title += " " + friendName;
+                labelFriends.Header += " " + friendName;
             }
+
+            echoWindow.Show();
         }
         private void Window_Closed(object sender, EventArgs e)
         {
             if (echoWindow != null) echoWindow.Close();
-        }
-
-        private void receiveFromServer()
-        {
-            while(true)
-            {
-                // TODO: 從 socket 接收 string command
-                string command = "Add Stroke";
-                //
-
-                switch(command)
-                {
-                    case "Add Stroke":
-                        // TODO: 從 socket 接收 string drawingAttributesText, string stylusPointsText
-                        string drawingAttributesText, stylusPointsText;
-                        drawingAttributesText = File.ReadAllText("../../../da.txt");
-                        stylusPointsText = File.ReadAllText("../../../sp.txt");
-                        //
-                        receiveStroke(drawingAttributesText, stylusPointsText);
-                        break;
-                    case "Erase All":
-                        receiveErase();
-                        break;
-                    case "Add TextBox":
-                        // TODO: 從 socket 接收 string text, string X, string Y
-                        string textBoxText = "important!!";
-                        string X = "100.23";
-                        string Y = "58.2345";
-                        //
-                        receiveTextBox(textBoxText, Convert.ToDouble(X), Convert.ToDouble(Y));
-                        break;
-                    case "Text Message":
-                        // TODO: 從 socket 接收 string text
-                        string messageText = "hello~";
-                        //
-                        receiveTextMessage(messageText);
-                        break;
-                    default:
-                        MessageBox.Show("Server傳了未知指令");
-                        break;
-                }
-            }
         }
 
         #region 畫圖及清除
@@ -290,9 +252,9 @@ namespace TeaChat
             InkCanvas.SetTop(label, Y);
         }
 
-        public void receiveTextMessage(string text)
+        public void receiveTextMessage(string fromWho, string text)
         {
-            textBlock.Text += "他： " + text + "\n";
+            textBlock.Text += fromWho + ": " + text + "\n";
         }
         #endregion
     }
