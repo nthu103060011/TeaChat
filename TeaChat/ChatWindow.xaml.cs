@@ -17,6 +17,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Ink;
+using Microsoft.Win32;
 
 namespace TeaChat
 {
@@ -257,5 +258,25 @@ namespace TeaChat
             textBlock.Text += fromWho + ": " + text + "\n";
         }
         #endregion
+
+        private void menuItemBackgroundImage_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files(*.bmp; *.jpg; *.png)| *.bmp; *.jpg; *.png | All files(*.*) | *.*";
+            openFileDialog.FilterIndex = 2;
+            if (openFileDialog.ShowDialog() == true)
+            {
+                BitmapImage imageSource = new BitmapImage(new Uri(openFileDialog.FileName));
+                Image image = new Image();
+                image.Source = imageSource;
+                if (imageSource.Width > inkCanvas.ActualWidth || imageSource.Height > inkCanvas.ActualHeight)
+                {
+                    image.Stretch = Stretch.Uniform;
+                    image.MaxWidth = inkCanvas.ActualWidth;
+                    image.MaxHeight = inkCanvas.ActualHeight;
+                }
+                inkCanvas.Children.Add(image);
+            }
+        }
     }
 }

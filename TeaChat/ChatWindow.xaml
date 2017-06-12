@@ -41,6 +41,7 @@
                 <MenuItem Header="5 dip" Click="menuItem5_Click" IsCheckable="True"/>
             </MenuItem>
             <MenuItem x:Name="menuItemAddText" Header="文字方塊" IsCheckable="True" Checked="menuItemAddText_Checked" Unchecked="menuItemAddText_Unchecked" />
+            <MenuItem x:Name="menuItemBackgroundImage" Header="背景圖片" Click="menuItemBackgroundImage_Click" />
         </Menu>
         <GridSplitter Grid.Row="1" Background="#FFB4B4B4" Width="5" Grid.RowSpan="4"/>
         <InkCanvas x:Name="inkCanvas" Margin="0,0,5,0" Grid.Row="2" Background="#FFFFFAC7" StrokeCollected="InkCanvas_StrokeCollected" PreviewMouseDown="inkCanvas_PreviewMouseDown" Grid.RowSpan="3">
