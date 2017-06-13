@@ -76,6 +76,10 @@ namespace TeaChat
         {
             inkCanvas.Strokes.Clear();
             inkCanvas.Children.Clear();
+            //for (int i=0; i<inkCanvas.Children.Count; i++)
+            //{
+            //    if (inkCanvas.Children[i] is Label) inkCanvas.Children.RemoveAt(i);
+            //}
 
             // TODO: 傳送 Erase 命令給 server
             echoWindow.receiveErase();
@@ -229,6 +233,44 @@ namespace TeaChat
         }
         #endregion
 
+        #region 上傳背景or檔案
+        private void menuItemBackgroundImage_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                BitmapImage imageSource = new BitmapImage(new Uri(openFileDialog.FileName));
+                Image image = new Image();
+                image.Source = imageSource;
+                if (imageSource.Width > inkCanvas.ActualWidth || imageSource.Height > inkCanvas.ActualHeight)
+                {
+                    image.Stretch = Stretch.Uniform;
+                    image.MaxWidth = inkCanvas.ActualWidth;
+                    image.MaxHeight = inkCanvas.ActualHeight;
+                }
+                inkCanvas.Children.Add(image);
+
+                uploadFile(openFileDialog.FileName);
+            }
+        }
+
+        private void menuItemUploadFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                uploadFile(openFileDialog.FileName);
+            }
+        }
+
+        private void uploadFile(string filePath)
+        {
+            // TODO: 傳送檔案給 server
+
+            //
+        }
+        #endregion
 
         #region 從server收到的命令
         public void receiveStroke(string drawingAttributesText, string stylusPointsText)
@@ -257,26 +299,17 @@ namespace TeaChat
         {
             textBlock.Text += fromWho + ": " + text + "\n";
         }
+
+        public void receiveBackgroundImage(string filename, byte[] data)
+        {
+            File.WriteAllBytes("Background Images\\" + filename, data);
+        }
+
+        public void receiveFile(string filename, byte[] data)
+        {
+            File.WriteAllBytes(filename, data);
+        }
         #endregion
 
-        private void menuItemBackgroundImage_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image Files(*.bmp; *.jpg; *.png)| *.bmp; *.jpg; *.png | All files(*.*) | *.*";
-            openFileDialog.FilterIndex = 2;
-            if (openFileDialog.ShowDialog() == true)
-            {
-                BitmapImage imageSource = new BitmapImage(new Uri(openFileDialog.FileName));
-                Image image = new Image();
-                image.Source = imageSource;
-                if (imageSource.Width > inkCanvas.ActualWidth || imageSource.Height > inkCanvas.ActualHeight)
-                {
-                    image.Stretch = Stretch.Uniform;
-                    image.MaxWidth = inkCanvas.ActualWidth;
-                    image.MaxHeight = inkCanvas.ActualHeight;
-                }
-                inkCanvas.Children.Add(image);
-            }
-        }
     }
 }

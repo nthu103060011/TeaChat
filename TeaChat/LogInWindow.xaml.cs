@@ -130,12 +130,26 @@ namespace TeaChat
                     //
                     chatWindows[chatroomIndex].receiveTextBox(textBoxText, Convert.ToDouble(X), Convert.ToDouble(Y));
                     break;
-                case "Text Message":
+                case "textMessage":
                     // TODO: 從 data 解析出 string fromWho, string text
                     string fromWho = "friend2";
                     string messageText = "hello~";
                     //
                     chatWindows[chatroomIndex].receiveTextMessage(fromWho, messageText);
+                    break;
+                case "backgroundImage":
+                    // TODO: 從 data 解析出 string filename, byte[] filedata
+                    string filename = "image.png";
+                    byte[] filedata = new byte[12345];
+                    //
+                    chatWindows[chatroomIndex].receiveBackgroundImage(filename, filedata);
+                    break;
+                case "file":
+                    // TODO: 從 data 解析出 string filename, byte[] filedata
+                    filename = "file.txt";
+                    filedata = new byte[12345];
+                    //
+                    chatWindows[chatroomIndex].receiveFile(filename, filedata);
                     break;
                 default:
                     MessageBox.Show("Server傳了未知指令");
