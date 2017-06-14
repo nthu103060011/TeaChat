@@ -18,6 +18,8 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Ink;
 using Microsoft.Win32;
+using Ookii.Dialogs.Wpf;
+
 
 namespace TeaChat
 {
@@ -59,6 +61,10 @@ namespace TeaChat
         private void Window_Closed(object sender, EventArgs e)
         {
             if (echoWindow != null) echoWindow.Close();
+
+            // TODO: 告訴 server 離開聊天
+
+            //
         }
 
         #region 畫圖及清除
@@ -75,11 +81,11 @@ namespace TeaChat
         private void menuItemEraseAll_Click(object sender, RoutedEventArgs e)
         {
             inkCanvas.Strokes.Clear();
-            inkCanvas.Children.Clear();
-            //for (int i=0; i<inkCanvas.Children.Count; i++)
-            //{
-            //    if (inkCanvas.Children[i] is Label) inkCanvas.Children.RemoveAt(i);
-            //}
+            for (int i = inkCanvas.Children.Count - 1; i >= 0; i--)
+            {
+                if (inkCanvas.Children[i] is Label)
+                    inkCanvas.Children.RemoveAt(i);
+            }
 
             // TODO: 傳送 Erase 命令給 server
             echoWindow.receiveErase();
@@ -251,7 +257,7 @@ namespace TeaChat
                 }
                 inkCanvas.Children.Add(image);
 
-                uploadFile(openFileDialog.FileName);
+                uploadFile(true, openFileDialog.FileName);
             }
         }
 
@@ -260,21 +266,24 @@ namespace TeaChat
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                uploadFile(openFileDialog.FileName);
+                uploadFile(false, openFileDialog.FileName);
             }
         }
 
-        private void uploadFile(string filePath)
+        private void uploadFile(bool isBackgroundImage, string filePath)
         {
+            byte[] data = File.ReadAllBytes(filePath);
             // TODO: 傳送檔案給 server
 
             //
         }
         #endregion
 
-        #region 從server收到的命令
-        public void receiveStroke(string drawingAttributesText, string stylusPointsText)
+        #region 從server收到的命令 DONE
+        public void receiveStroke(string[] strokeString)
         {
+            string drawingAttributesText = strokeString[0];
+            string stylusPointsText = strokeString[1];
             DrawingAttributes drawingAttributes = JsonConvert.DeserializeObject<DrawingAttributes>(drawingAttributesText);
             StylusPointCollection strokeCollection = JsonConvert.DeserializeObject<StylusPointCollection>(stylusPointsText);
             inkCanvas.Strokes.Add(new Stroke(strokeCollection, drawingAttributes));
@@ -283,11 +292,18 @@ namespace TeaChat
         public void receiveErase()
         {
             inkCanvas.Strokes.Clear();
-            inkCanvas.Children.Clear();
+            for (int i = inkCanvas.Children.Count - 1; i >= 0; i--)
+            {
+                if (inkCanvas.Children[i] is Label)
+                    inkCanvas.Children.RemoveAt(i);
+            }
         }
 
-        public void receiveTextBox(string text, double X, double Y)
+        public void receiveTextBox(string[] textBoxString)
         {
+            string text = textBoxString[0];
+            double X = Convert.ToDouble(textBoxString[1]);
+            double Y = Convert.ToDouble(textBoxString[2]);
             Label label = new Label();
             label.Content = text;
             inkCanvas.Children.Add(label);
@@ -295,19 +311,46 @@ namespace TeaChat
             InkCanvas.SetTop(label, Y);
         }
 
-        public void receiveTextMessage(string fromWho, string text)
+        public void receiveTextMessage(string[] textMessageString)
         {
+            string fromWho = textMessageString[0];
+            string text = textMessageString[1];
             textBlock.Text += fromWho + ": " + text + "\n";
         }
 
         public void receiveBackgroundImage(string filename, byte[] data)
         {
             File.WriteAllBytes("Background Images\\" + filename, data);
+
+            BitmapImage imageSource = new BitmapImage(new Uri("Background Images\\" + filename));
+            Image image = new Image();
+            image.Source = imageSource;
+            if (imageSource.Width > inkCanvas.ActualWidth || imageSource.Height > inkCanvas.ActualHeight)
+            {
+                image.Stretch = Stretch.Uniform;
+                image.MaxWidth = inkCanvas.ActualWidth;
+                image.MaxHeight = inkCanvas.ActualHeight;
+            }
+            inkCanvas.Children.Add(image);
         }
 
         public void receiveFile(string filename, byte[] data)
         {
-            File.WriteAllBytes(filename, data);
+            if (MessageBox.Show("是否要儲存其他人上傳的檔案: " + filename, "確認訊息", MessageBoxButton.YesNo)
+                == MessageBoxResult.Yes)
+            {
+                VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
+                if (folderBrowserDialog.ShowDialog() == true)
+                {
+                    string filepath = folderBrowserDialog.SelectedPath + "\\";
+                    File.WriteAllBytes(filepath + filename, data);
+                }
+            }
+        }
+
+        public void receiveLeavingFriend(string leavingFriend)
+        {
+            textBlock.Text += "*** " + leavingFriend + "離開聊天室\n";
         }
         #endregion
 

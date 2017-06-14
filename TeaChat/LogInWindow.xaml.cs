@@ -42,6 +42,7 @@ namespace TeaChat
                 chatWindow.Close();
         }
 
+        #region 登入 登出 建立聊天
         private void buttonLogIn_Click(object sender, RoutedEventArgs e)
         {
             if (textBoxUsername.Text == "")
@@ -49,7 +50,6 @@ namespace TeaChat
             else if (logIn(textBoxUsername.Text) == false)
                 MessageBox.Show("登入失敗\nServer沒開或帳號錯誤");
         }
-
         private bool logIn(string username)
         {
             // TODO: 連線到server，如果沒連上，connectSuccess設為false
@@ -86,6 +86,51 @@ namespace TeaChat
             return false;
         }
 
+        private void buttonLogOut_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: 告訴 server 我要登出，並關閉連線
+
+            //
+
+            foreach (ChatWindow chatWindow in chatWindows)
+                chatWindow.Close();
+
+            listBoxOnlineUsers.UnselectAll();
+            userList.Clear();
+
+            this.Title = "TeaChat - 登入";
+            gridHome.Visibility = Visibility.Collapsed;
+            stackPanelLogIn.Visibility = Visibility.Visible;
+        }
+
+        private void buttonStartChat_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> selectedUsers = new List<string>();
+            foreach (string selectedUser in listBoxOnlineUsers.SelectedItems)
+                selectedUsers.Add(selectedUser);
+
+            if (selectedUsers.Count <= 0)
+                MessageBox.Show("請選擇聊天對象");
+            else if (startChat(selectedUsers) == false)
+                MessageBox.Show("建立聊天失敗");
+        }
+        private bool startChat(List<string> chatFriends)
+        {
+            // TODO: 告訴 server 我要跟 List<string> chatFriends 建立聊天
+            bool startChatSuccess = true;
+            //
+            if (startChatSuccess)
+            {
+                ChatWindow newChatWindow = new ChatWindow(chatFriends, this);
+                chatWindows.Add(newChatWindow);
+                newChatWindow.Show();
+
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
         private void receiveFromServer()
         {
             // TODO: 接收訊息 更新上線者名單 or 聊天請求 or 聊天訊息
@@ -108,8 +153,15 @@ namespace TeaChat
                     //
                     List<string> chatFriends = JsonConvert.DeserializeObject<List<string>>(chatFriendsString);
                     ChatWindow newChatWindow = new ChatWindow(chatFriends, this);
+                    MessageBox.Show("有新的聊天請求");
                     chatWindows.Add(newChatWindow);
                     newChatWindow.Show();
+                    break;
+                case "friendLeaving":
+                    // TODO: 從 data 解析出 leavingFriend
+                    string leavingFriend = "takeashower";
+                    //
+                    chatWindows[chatroomIndex].receiveLeavingFriend(leavingFriend);
                     break;
                 case "addStroke":
                     // TODO: 從 data 解析出 drawingAttributesText, stylusPointsText
@@ -155,51 +207,6 @@ namespace TeaChat
                     MessageBox.Show("Server傳了未知指令");
                     break;
             }
-        }
-
-        private void buttonStartChat_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> selectedUsers = new List<string>();
-            foreach (string selectedUser in listBoxOnlineUsers.SelectedItems)
-                selectedUsers.Add(selectedUser);
-
-            if (selectedUsers.Count <= 0)
-                MessageBox.Show("請選擇聊天對象");
-            else if (startChat(selectedUsers) == false)
-                MessageBox.Show("建立聊天失敗");
-        }
-
-        private bool startChat(List<string> chatFriends)
-        {
-            // TODO: 告訴 server 我要跟 List<string> chatFriends 建立聊天
-            bool startChatSuccess = true;
-            //
-            if (startChatSuccess)
-            {
-                ChatWindow newChatWindow = new ChatWindow(chatFriends, this);
-                chatWindows.Add(newChatWindow);
-                newChatWindow.Show();
-
-                return true;
-            }
-            return false;
-        }
-
-        private void buttonLogOut_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO: 告訴 server 我要登出，並關閉連線
-
-            //
-
-            foreach (ChatWindow chatWindow in chatWindows)
-                chatWindow.Close();
-
-            listBoxOnlineUsers.UnselectAll();
-            userList.Clear();
-
-            this.Title = "TeaChat - 登入";
-            gridHome.Visibility = Visibility.Collapsed;
-            stackPanelLogIn.Visibility = Visibility.Visible;
         }
 
         public void sendToServer(string command, ChatWindow fromChatroom, byte[] data)
