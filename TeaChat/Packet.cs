@@ -33,6 +33,11 @@ namespace TeaChat
             packet = new byte[8192];
         }
 
+        public Packet(byte[] packet)
+        {
+            this.packet = packet;
+        }
+
         public byte[] getPacket()
         {
             return packet;

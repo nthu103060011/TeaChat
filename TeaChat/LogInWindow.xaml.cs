@@ -206,10 +206,13 @@ namespace TeaChat
             }
         }
 
-        public void sendToServer(string command, ChatWindow fromChatroom, byte[] data)
+        public void sendToServer(ChatWindow fromChatroom, Packet packet)
         {
             int chatroomIndex = chatWindows.IndexOf(fromChatroom);
-            // TODO: 傳送 command, index, data 給 server
+            packet.changeChatroomNumber(chatroomIndex);
+            byte[] dataSand = packet.getPacket();
+
+            // TODO: 傳送 dataSand 給 server
 
             //
         }
