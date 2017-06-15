@@ -165,29 +165,26 @@ namespace TeaChat
                     break;
                 case "addStroke":
                     // TODO: 從 data 解析出 drawingAttributesText, stylusPointsText
-                    string drawingAttributesText, stylusPointsText;
-                    drawingAttributesText = File.ReadAllText("../../../da.txt");
-                    stylusPointsText = File.ReadAllText("../../../sp.txt");
+                    string[] strokeString = new string[2];
+                    strokeString[0] = File.ReadAllText("../../../da.txt");
+                    strokeString[1] = File.ReadAllText("../../../sp.txt");
                     //
-                    chatWindows[chatroomIndex].receiveStroke(drawingAttributesText, stylusPointsText);
+                    chatWindows[chatroomIndex].receiveStroke(strokeString);
                     break;
                 case "eraseAll":
                     chatWindows[chatroomIndex].receiveErase();
                     break;
                 case "addTextBox":
                     // TODO: 從 data 解析出 string text, string X, string Y
-                    string textBoxText = "important!!";
-                    string X = "100.23";
-                    string Y = "58.2345";
+                    string[] textBoxString = { "important!!", "100.23", "58.2345" };
                     //
-                    chatWindows[chatroomIndex].receiveTextBox(textBoxText, Convert.ToDouble(X), Convert.ToDouble(Y));
+                    chatWindows[chatroomIndex].receiveTextBox(textBoxString);
                     break;
                 case "textMessage":
                     // TODO: 從 data 解析出 string fromWho, string text
-                    string fromWho = "friend2";
-                    string messageText = "hello~";
+                    string[] textMessageString = { "friend2", "hello~" };
                     //
-                    chatWindows[chatroomIndex].receiveTextMessage(fromWho, messageText);
+                    chatWindows[chatroomIndex].receiveTextMessage(textMessageString);
                     break;
                 case "backgroundImage":
                     // TODO: 從 data 解析出 string filename, byte[] filedata

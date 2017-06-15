@@ -51,10 +51,15 @@
             </InkCanvas.DefaultDrawingAttributes>-->
         </InkCanvas>
         <Button x:Name="button1" Content="視訊通話" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Grid.Row="1" Grid.Column="1"/>
-        <StackPanel Grid.Column="2" Margin="0" Grid.Row="2" Background="#FFA5E3FF" Grid.RowSpan="2">
-            <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="" Height="364"/>
-            <TextBox x:Name="textBox" TextWrapping="Wrap" PreviewKeyDown="textBox_PreviewKeyDown" VerticalAlignment="Bottom" Height="70"/>
-            <Button x:Name="buttonSendText" Content="送出" Background="#FFA5E3FF" Click="buttonSendText_Click" BorderBrush="{x:Null}" BorderThickness="0" Margin="0" ClipToBounds="True" Padding="1,5"/>
-        </StackPanel>
+        <Grid Grid.Column="2" Margin="0" Grid.Row="2" Background="#FFA5E3FF" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text=""/>
+            <TextBox x:Name="textBox" TextWrapping="Wrap" PreviewKeyDown="textBox_PreviewKeyDown" Grid.Row="1"/>
+            <Button x:Name="buttonSendText" Content="送出" Background="#FFA5E3FF" Click="buttonSendText_Click" BorderBrush="{x:Null}" BorderThickness="0" Margin="0" ClipToBounds="True" Padding="1,5" Grid.Row="2"/>
+        </Grid>
     </Grid>
 </Window>
