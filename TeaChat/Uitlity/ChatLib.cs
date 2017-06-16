@@ -12,11 +12,11 @@ namespace TeaChat.Uitlity
 {
     public class ChatSetting
     {
-        public static String serverIp = "140.114.86.61";
+        public static String serverIp = "192.168.0.108";
         public static int port = 9877;
     }
 
-    public delegate String StrHandler(String str);
+    public delegate void StrHandler(byte[] str);
 
     public class ChatSocket
     {
@@ -37,15 +37,16 @@ namespace TeaChat.Uitlity
             remoteEndPoint = socket.RemoteEndPoint;
         }
 
-        public String receive()
+        public byte[] receive()
         {
-            return reader.ReadLine();
+            byte[] msg = new byte[8192];
+            socket.Receive(msg);
+            return msg;
         }
 
-        public ChatSocket send(String line)
+        public ChatSocket send(byte[] line)
         {
-            writer.WriteLine(line);
-            writer.Flush();
+            socket.Send(line);
             return this;
         }
 
@@ -80,7 +81,7 @@ namespace TeaChat.Uitlity
             {
                 while (true)
                 {
-                    String line = receive();
+                    byte[] line = receive();
                     inHandler(line);
                 }
             }

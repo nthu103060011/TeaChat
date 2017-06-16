@@ -28,7 +28,7 @@ namespace TeaChat
     {
         ChatSocket client;
 
-        StrHandler msgHandler;
+        //StrHandler msgHandler;
 
         List<ChatWindow> chatWindows = new List<ChatWindow>();
 
@@ -89,11 +89,11 @@ namespace TeaChat
                     gridHome.Visibility = Visibility.Visible;
 
                     // TODO: 新增 thread 去跑 receiveFromServer() 接收 server的訊息
-
+                    client.newListener(receiveFromServer);
                     //
 
                     //假裝在這時收到server傳來使用者名單
-                    receiveFromServer();
+                    //receiveFromServer();
                     //
 
                     return true;
@@ -154,10 +154,10 @@ namespace TeaChat
         }
         #endregion
 
-        private void receiveFromServer()
+        private void receiveFromServer(byte[] dataReceive)
         {
             // TODO: 接收dataReceive
-            byte[] dataReceive = new byte[8192];
+            //byte[] dataReceive = new byte[8192];
             //
             Packet packet = new Packet(dataReceive);
             Packet.Commands command = packet.getCommand();
@@ -167,6 +167,9 @@ namespace TeaChat
             {
                 case Packet.Commands.UpdateUserList:
                     userList = packet.getUpdateUserListData();
+                    //string s = "";
+                    //foreach (string ss in userList) s += ss + " ";
+                    //MessageBox.Show(s);
                     listBoxOnlineUsers.ItemsSource = userList;
                     break;
                 case Packet.Commands.ChatRequest:
@@ -222,7 +225,7 @@ namespace TeaChat
             byte[] dataSand = packet.getPacket();
 
             // TODO: 傳送 dataSand 給 server
-            client.send(  " : " + dataSand);
+            client.send(dataSand);
             //
         }
     }
