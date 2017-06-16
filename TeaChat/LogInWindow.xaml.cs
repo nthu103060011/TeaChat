@@ -26,6 +26,8 @@ namespace TeaChat
 
         public List<string> userList;
 
+        public string myName;
+
         public LogInWindow()
         {
             InitializeComponent();
@@ -34,9 +36,7 @@ namespace TeaChat
         }
         private void Window_Closed(object sender, EventArgs e)
         {
-            // TODO: 告訴 server 我要登出，並關閉連線
-
-            //
+            // TODO: 如果還沒登出，要登出
 
             foreach (ChatWindow chatWindow in chatWindows)
                 chatWindow.Close();
@@ -52,15 +52,17 @@ namespace TeaChat
         }
         private bool logIn(string username)
         {
+            myName = username;
+
             // TODO: 連線到server，如果沒連上，connectSuccess設為false
             bool connectSuccess = true;
             //
 
             if (connectSuccess)
             {
-                // TODO: 告訴 server 我的 username
-
-                //
+                Packet packet = new Packet();
+                packet.makePacketReportName(username);
+                sendToServer(null, packet);
 
                 // TODO(可晚點做): 從 server 那邊得到回傳 登入成功或失敗
                 bool logInSuccess = true;
@@ -88,7 +90,10 @@ namespace TeaChat
 
         private void buttonLogOut_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: 告訴 server 我要登出，並關閉連線
+            Packet packet = new Packet();
+            packet.makePacketLogOut();
+            sendToServer(null, packet);
+            // TODO: 關閉連線
 
             //
 
@@ -116,7 +121,11 @@ namespace TeaChat
         }
         private bool startChat(List<string> chatFriends)
         {
-            // TODO: 告訴 server 我要跟 List<string> chatFriends 建立聊天
+            Packet packet = new Packet();
+            packet.makePacketChatRequest(chatFriends);
+            sendToServer(null, packet);
+
+            // TODO: 確認建立聊天是否成功
             bool startChatSuccess = true;
             //
             if (startChatSuccess)
@@ -133,71 +142,53 @@ namespace TeaChat
 
         private void receiveFromServer()
         {
-            // TODO: 接收訊息 更新上線者名單 or 聊天請求 or 聊天訊息
-            string command = "updateUserList";
-            int chatroomIndex = 1;
-            byte[] data = new byte[8190];
+            // TODO: 接收dataReceive
+            byte[] dataReceive = new byte[8192];
             //
+            Packet packet = new Packet(dataReceive);
+            Packet.Commands command = packet.getCommand();
+            int chatroomIndex = packet.getChatroomIndex();
+            
             switch (command)
             {
-                case "updateUserList":
-                    // TODO: 從 data 解析出 userListString
-                    string userListString = "[\"friend1\", \"friend2\", \"friend3\"]";
-                    //
-                    userList = JsonConvert.DeserializeObject<List<string>>(userListString);
+                case Packet.Commands.UpdateUserList:
+                    userList = packet.getUpdateUserListData();
                     listBoxOnlineUsers.ItemsSource = userList;
                     break;
-                case "chatRequest":
-                    // TODO: 從 data 解析出 chatFriendsString
-                    string chatFriendsString = "[\"friend1\", \"friend3\"]";
-                    //
-                    List<string> chatFriends = JsonConvert.DeserializeObject<List<string>>(chatFriendsString);
+                case Packet.Commands.ChatRequest:
+                    List<string> chatFriends = packet.getChatRequestData();
                     ChatWindow newChatWindow = new ChatWindow(chatFriends, this);
                     MessageBox.Show("有新的聊天請求");
                     chatWindows.Add(newChatWindow);
                     newChatWindow.Show();
                     break;
-                case "friendLeaving":
-                    // TODO: 從 data 解析出 leavingFriend
-                    string leavingFriend = "takeashower";
-                    //
+                case Packet.Commands.LeaveChatroom:
+                    string leavingFriend = packet.getFriendLeavingData();
                     chatWindows[chatroomIndex].receiveLeavingFriend(leavingFriend);
                     break;
-                case "addStroke":
-                    // TODO: 從 data 解析出 drawingAttributesText, stylusPointsText
-                    string[] strokeString = new string[2];
-                    strokeString[0] = File.ReadAllText("../../../da.txt");
-                    strokeString[1] = File.ReadAllText("../../../sp.txt");
-                    //
+                case Packet.Commands.AddStroke:
+                    string[] strokeString = packet.getAddStrokeData();
                     chatWindows[chatroomIndex].receiveStroke(strokeString);
                     break;
-                case "eraseAll":
+                case Packet.Commands.EraseAll:
                     chatWindows[chatroomIndex].receiveErase();
                     break;
-                case "addTextBox":
-                    // TODO: 從 data 解析出 string text, string X, string Y
-                    string[] textBoxString = { "important!!", "100.23", "58.2345" };
-                    //
+                case Packet.Commands.AddTextBox:
+                    string[] textBoxString = packet.getAddTextBoxData();
                     chatWindows[chatroomIndex].receiveTextBox(textBoxString);
                     break;
-                case "textMessage":
-                    // TODO: 從 data 解析出 string fromWho, string text
-                    string[] textMessageString = { "friend2", "hello~" };
-                    //
+                case Packet.Commands.TextMessage:
+                    string[] textMessageString = packet.getTextMessageData();
                     chatWindows[chatroomIndex].receiveTextMessage(textMessageString);
                     break;
-                case "backgroundImage":
-                    // TODO: 從 data 解析出 string filename, byte[] filedata
-                    string filename = "image.png";
-                    byte[] filedata = new byte[12345];
-                    //
-                    chatWindows[chatroomIndex].receiveBackgroundImage(filename, filedata);
+                case Packet.Commands.BackgroundImage:
+                    string imageFilename = packet.getFilename();
+                    byte[] imageFiledata = packet.getFileData();
+                    chatWindows[chatroomIndex].receiveBackgroundImage(imageFilename, imageFiledata);
                     break;
-                case "file":
-                    // TODO: 從 data 解析出 string filename, byte[] filedata
-                    filename = "file.txt";
-                    filedata = new byte[12345];
-                    //
+                case Packet.Commands.File:
+                    string filename = packet.getFilename();
+                    byte[] filedata = packet.getFileData();
                     chatWindows[chatroomIndex].receiveFile(filename, filedata);
                     break;
                 default:
@@ -208,8 +199,12 @@ namespace TeaChat
 
         public void sendToServer(ChatWindow fromChatroom, Packet packet)
         {
-            int chatroomIndex = chatWindows.IndexOf(fromChatroom);
-            packet.changeChatroomNumber(chatroomIndex);
+            int chatroomIndex;
+            if (fromChatroom != null)
+                chatroomIndex = chatWindows.IndexOf(fromChatroom);
+            else
+                chatroomIndex = -1;
+            packet.changeChatroomIndex(chatroomIndex);
             byte[] dataSand = packet.getPacket();
 
             // TODO: 傳送 dataSand 給 server

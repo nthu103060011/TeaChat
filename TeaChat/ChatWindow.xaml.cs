@@ -34,8 +34,7 @@ namespace TeaChat
         TextBox textBoxInCanvas = new TextBox();
         bool creatingTextBox = false;
         bool editingText = false;
-
-        public string myUserName;
+        
         private List<string> chatFriends;
 
         public ChatWindow(List<string> chatFriends, LogInWindow homeWindow)
@@ -56,14 +55,16 @@ namespace TeaChat
                 labelFriends.Header += " " + friendName;
             }
 
-            echoWindow.Show();
+            //echoWindow.Show();
         }
         private void Window_Closed(object sender, EventArgs e)
         {
             if (echoWindow != null) echoWindow.Close();
 
-            // TODO: 告訴 server 離開聊天
-
+            // 告訴 server 離開聊天
+            Packet packet = new Packet();
+            packet.makePacketLogOut();
+            homeWindow.sendToServer(this, packet);
             //
         }
 
@@ -73,7 +74,10 @@ namespace TeaChat
             string drawingAttributesText = JsonConvert.SerializeObject(e.Stroke.DrawingAttributes);
             string stylusPointsText = JsonConvert.SerializeObject(e.Stroke.StylusPoints);
 
-            // TODO: 傳送 drawingAttributesText, stylusPointsText 兩段 string 給 server
+            // 傳送 drawingAttributesText, stylusPointsText 兩段 string 給 server
+            Packet packet = new Packet();
+            packet.makePacketAddStroke(0, drawingAttributesText, stylusPointsText);
+            homeWindow.sendToServer(this, packet);
             echoWindow.receiveStroke(drawingAttributesText, stylusPointsText);
             //
         }
@@ -87,7 +91,9 @@ namespace TeaChat
                     inkCanvas.Children.RemoveAt(i);
             }
 
-            // TODO: 傳送 Erase 命令給 server
+            // 傳送 Erase 命令給 server
+            Packet packet = new Packet();
+            packet.makePacketEraseAll(0);
             echoWindow.receiveErase();
             //
         }
@@ -205,7 +211,10 @@ namespace TeaChat
                 menuItemAddText.IsChecked = false;
                 editingText = false;
 
-                // TODO: 傳送文字方塊 string text 和座標 double X, Y給 server
+                // 傳送文字方塊 string text 和座標 double X, Y給 server
+                Packet packet = new Packet();
+                packet.makePacketAddTextBox(0, text, X.ToString(), Y.ToString());
+                homeWindow.sendToServer(this, packet);
                 echoWindow.receiveTextBox(text, X, Y);
                 //
             }
@@ -219,7 +228,10 @@ namespace TeaChat
             textBox.Text = "";
             textBlock.Text += "我： " + text + "\n";
 
-            // TODO: 傳送文字給 server
+            // 傳送文字給 server
+            Packet packet = new Packet();
+            packet.makePacketTextMessage(0, homeWindow.myName, text);
+            homeWindow.sendToServer(this, packet);
             echoWindow.receiveTextMessage(text);
             //
         }
@@ -232,7 +244,10 @@ namespace TeaChat
                 textBox.Text = "";
                 textBlock.Text += "我： " + text + "\n";
 
-                // TODO: 傳送文字給 server
+                // 傳送文字給 server
+                Packet packet = new Packet();
+                packet.makePacketTextMessage(0, homeWindow.myName, text);
+                homeWindow.sendToServer(this, packet);
                 echoWindow.receiveTextMessage(text);
                 //
             }
