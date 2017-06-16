@@ -44,6 +44,11 @@ namespace TeaChat.Uitlity
             return msg;
         }
 
+        public void close()
+        {
+            socket.Close();
+        }
+
         public ChatSocket send(byte[] line)
         {
             socket.Send(line);

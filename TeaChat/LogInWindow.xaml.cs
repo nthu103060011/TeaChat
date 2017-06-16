@@ -108,7 +108,7 @@ namespace TeaChat
             packet.makePacketLogOut();
             sendToServer(null, packet);
             // TODO: 關閉連線
-
+            client.close();
             //
 
             foreach (ChatWindow chatWindow in chatWindows)
