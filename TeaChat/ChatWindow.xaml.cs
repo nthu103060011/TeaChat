@@ -19,6 +19,7 @@ using System.Threading;
 using System.Windows.Ink;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
+using TeaChat.Audio;
 
 
 namespace TeaChat
@@ -37,6 +38,8 @@ namespace TeaChat
 
         public string myUserName;
         private List<string> chatFriends;
+
+        private ConferenceCallWindow conf_call_window = new ConferenceCallWindow();
 
         public ChatWindow(List<string> chatFriends, LogInWindow homeWindow)
         {
@@ -354,5 +357,14 @@ namespace TeaChat
         }
         #endregion
 
+        #region conference call
+        private void conferenceCallButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!this.conf_call_window.IsLoaded)
+            {
+                this.conf_call_window.Show();
+            }
+        }
+        #endregion
     }
 }
