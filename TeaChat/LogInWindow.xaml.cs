@@ -212,7 +212,7 @@ namespace TeaChat
                 case Packet.Commands.OpenConferneceCall:
                     this.chatWindows[chatroomIndex].SetupConferenceCallWindow();
                     Packet rp_packet = new Packet();
-                    rp_packet.MakePratConfCallPacket(chatroomIndex);
+                    rp_packet.MakePartConfCallPacket(chatroomIndex);
                     this.sendToServer(this.chatWindows[chatroomIndex], rp_packet);
                     break;
                 case Packet.Commands.ConferenceCallOn:

@@ -305,7 +305,7 @@ namespace TeaChat
             this.packet[1] = (byte)chat_room_num;
         }
 
-        public void MakePratConfCallPacket(int chat_room_num)
+        public void MakePartConfCallPacket(int chat_room_num)
         {
             this.packet[0] = (byte)Commands.ParticipateConferenceCall;
             this.packet[1] = (byte)chat_room_num;
