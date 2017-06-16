@@ -216,7 +216,7 @@ namespace TeaChat
                     this.chatWindows[chatroomIndex].PlayAudioData(data, data_size);
                     break;
                 default:
-                    MessageBox.Show("Server傳了未知指令");
+                   // MessageBox.Show("Server傳了未知指令");
                     break;
             }
         }
