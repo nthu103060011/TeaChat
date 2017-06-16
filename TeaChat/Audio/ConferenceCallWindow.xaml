@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeaChat.Audio"
         mc:Ignorable="d"
-        Title="Tea Chat" Height="300" Width="220">
+        Title="Tea Chat" Height="300" Width="220" Closed="Window_Closed">
     <Grid>
         <Image x:Name="stateImage" Height="100" Margin="56,120,56,23" Width="100"/>
         <TextBox x:Name="stateTextBox" HorizontalAlignment="Stretch" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Width="128" Margin="0,50,0,0" FontSize="18" FontFamily="Yu Gothic UI Semibold" FontWeight="Bold" TextAlignment="Center"/>

@@ -124,5 +124,10 @@ namespace TeaChat.Audio
                 this.SetConferenceCallStateToEnd();
             }
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            this.audio_handler.Disable();
+        }
     }
 }

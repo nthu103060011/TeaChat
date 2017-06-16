@@ -38,7 +38,7 @@ namespace TeaChat
         
         private List<string> chatFriends;
 
-        private ConferenceCallWindow conf_call_window = new ConferenceCallWindow();
+        private ConferenceCallWindow conf_call_window = null;// = new ConferenceCallWindow();
 
         public ChatWindow(List<string> chatFriends, LogInWindow homeWindow)
         {
@@ -375,9 +375,18 @@ namespace TeaChat
         #region conference call
         private void conferenceCallButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!this.conf_call_window.IsLoaded)
+            if (conf_call_window == null)
             {
+                conf_call_window = new ConferenceCallWindow();
                 this.conf_call_window.Show();
+            }
+            else
+            {
+                if (!conf_call_window.IsLoaded)
+                {
+                    conf_call_window = new ConferenceCallWindow();
+                    conf_call_window.Show();
+                }
             }
         }
         #endregion

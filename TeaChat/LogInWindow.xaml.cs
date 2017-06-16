@@ -65,13 +65,13 @@ namespace TeaChat
 
             // TODO: 連線到server，如果沒連上，connectSuccess設為false
             bool connectSuccess;
-            client = ChatSocket.connect(ChatSetting.serverIp);
+            //client = ChatSocket.connect(ChatSetting.serverIp);
             if (client == null)
                 connectSuccess = false;
             else
                 connectSuccess = true;
             //
-
+            connectSuccess = true;
             if (connectSuccess)
             {
                 Packet packet = new Packet();
@@ -93,7 +93,11 @@ namespace TeaChat
                     //
 
                     //假裝在這時收到server傳來使用者名單
-                    receiveFromServer();
+
+                    userList = new List<string>();
+                    userList.Add("friend1");
+                    userList.Add("friend2");
+                    listBoxOnlineUsers.ItemsSource = userList;
                     //
 
                     return true;
@@ -115,7 +119,7 @@ namespace TeaChat
                 chatWindow.Close();
 
             listBoxOnlineUsers.UnselectAll();
-            userList.Clear();
+            if (userList != null) userList.Clear();
 
             this.Title = "TeaChat - 登入";
             gridHome.Visibility = Visibility.Collapsed;
@@ -222,7 +226,7 @@ namespace TeaChat
             byte[] dataSand = packet.getPacket();
 
             // TODO: 傳送 dataSand 給 server
-            client.send(  " : " + dataSand);
+            //client.send(  " : " + dataSand);
             //
         }
     }
