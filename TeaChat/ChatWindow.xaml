@@ -50,7 +50,7 @@
                 <DrawingAttributes Color="Black" FitToCurve="False" Height="2.0031496062992127" IgnorePressure="True" IsHighlighter="False" StylusTip="Ellipse" StylusTipTransform="Identity" Width="2.0031496062992127"/>
             </InkCanvas.DefaultDrawingAttributes>-->
         </InkCanvas>
-        <Button x:Name="button1" Content="視訊通話" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Grid.Row="1" Grid.Column="1"/>
+        <Button x:Name="conferenceCallButton" Content="群組通話" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Grid.Row="1" Grid.Column="1" Click="conferenceCallButton_Click"/>
         <Grid Grid.Column="2" Margin="0" Grid.Row="2" Background="#FFA5E3FF" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="10*"/>

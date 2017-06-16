@@ -16,16 +16,16 @@ namespace TeaChat
             ReportName,     // string username
             UpdateUserList, // List<string> onlineUsers
             ChatRequest,    // List<string> chatFriends
-            LeaveChatroom,  // int chatroomNumber
-            FriendLeaving,  // int chatroomNumber, string leavingFriend
+            LeaveChatroom,  // int chatroomIndex
+            FriendLeaving,  // int chatroomIndex, string leavingFriend
             LogOut,
 
-            AddStroke,      // int chatroomNumber, string drawingAttributesText, string stylusPointsText
-            EraseAll,       // int chatroomNumber
-            AddTextBox,     // int chatroomNumber, string text, string X, string Y
-            TextMessage,    // int chatroomNumber, string fromWho, string text
-            BackgroundImage,// int chatroomNumber, string filename, byte[] data
-            File,           // int chatroomNumber, string filename, byte[] data
+            AddStroke,      // int chatroomIndex, string drawingAttributesText, string stylusPointsText
+            EraseAll,       // int chatroomIndex
+            AddTextBox,     // int chatroomIndex, string text, string X, string Y
+            TextMessage,    // int chatroomIndex, string fromWho, string text
+            BackgroundImage,// int chatroomIndex, string filename, byte[] data
+            File,           // int chatroomIndex, string filename, byte[] data
         }
 
         public Packet()
@@ -48,14 +48,14 @@ namespace TeaChat
             return (Commands)packet[0];
         }
 
-        public int getChatroomNumber()
+        public int getChatroomIndex()
         {
             return packet[1];
         }
 
-        public void changeChatroomNumber(int chatroomNumber)
+        public void changeChatroomIndex(int chatroomIndex)
         {
-            packet[1] = (byte)chatroomNumber;
+            packet[1] = (byte)chatroomIndex;
         }
 
         public int getDataSize()
@@ -178,20 +178,20 @@ namespace TeaChat
             Array.Copy(data, 0, packet, 6, data.Length);
         }
 
-        public void makePacketLeaveChatroom(int chatroomNumber)
+        public void makePacketLeaveChatroom(int chatroomIndex)
         {
             packet.Initialize();
             packet[0] = (byte)Commands.LeaveChatroom;
-            packet[1] = (byte)chatroomNumber;
+            packet[1] = (byte)chatroomIndex;
             byte[] dataSize = BitConverter.GetBytes(0);
             Array.Copy(dataSize, 0, packet, 2, 4);
         }
 
-        public void makePacketFriendLeaving(int chatroomNumber, string leavingFriend)
+        public void makePacketFriendLeaving(int chatroomIndex, string leavingFriend)
         {
             packet.Initialize();
             packet[0] = (byte)Commands.FriendLeaving;
-            packet[1] = (byte)chatroomNumber;
+            packet[1] = (byte)chatroomIndex;
             byte[] data = Encoding.UTF8.GetBytes(leavingFriend);
             byte[] dataSize = BitConverter.GetBytes(data.Length);
             Array.Copy(dataSize, 0, packet, 2, 4);
@@ -207,11 +207,11 @@ namespace TeaChat
             Array.Copy(dataSize, 0, packet, 2, 4);
         }
 
-        public void makePacketAddStroke(int chatroomNumber, string drawingAttributesText, string stylusPointsText)
+        public void makePacketAddStroke(int chatroomIndex, string drawingAttributesText, string stylusPointsText)
         {
             packet.Initialize();
             packet[0] = (byte)Commands.AddStroke;
-            packet[1] = (byte)chatroomNumber;
+            packet[1] = (byte)chatroomIndex;
             string[] stringArray = new string[2] { drawingAttributesText, stylusPointsText };
             string json = JsonConvert.SerializeObject(stringArray);
             byte[] data = Encoding.UTF8.GetBytes(json);
@@ -220,20 +220,20 @@ namespace TeaChat
             Array.Copy(data, 0, packet, 6, Math.Min(8186, data.Length)); // TODO: 分割封包
         }
 
-        public void makePacketEraseAll(int chatroomNumber)
+        public void makePacketEraseAll(int chatroomIndex)
         {
             packet.Initialize();
             packet[0] = (byte)Commands.EraseAll;
-            packet[1] = (byte)chatroomNumber;
+            packet[1] = (byte)chatroomIndex;
             byte[] dataSize = BitConverter.GetBytes(0);
             Array.Copy(dataSize, 0, packet, 2, 4);
         }
 
-        public void makePacketAddTextBox(int chatroomNumber, string text, string X, string Y)
+        public void makePacketAddTextBox(int chatroomIndex, string text, string X, string Y)
         {
             packet.Initialize();
             packet[0] = (byte)Commands.AddTextBox;
-            packet[1] = (byte)chatroomNumber;
+            packet[1] = (byte)chatroomIndex;
             string[] stringArray = new string[3] { text, X, Y };
             string json = JsonConvert.SerializeObject(stringArray);
             byte[] data = Encoding.UTF8.GetBytes(json);
@@ -242,11 +242,11 @@ namespace TeaChat
             Array.Copy(data, 0, packet, 6, data.Length);
         }
 
-        public void makePacketTextMessage(int chatroomNumber, string fromWho, string text)
+        public void makePacketTextMessage(int chatroomIndex, string fromWho, string text)
         {
             packet.Initialize();
             packet[0] = (byte)Commands.TextMessage;
-            packet[1] = (byte)chatroomNumber;
+            packet[1] = (byte)chatroomIndex;
             string[] stringArray = new string[2] { fromWho, text };
             string json = JsonConvert.SerializeObject(stringArray);
             byte[] data = Encoding.UTF8.GetBytes(json);
@@ -255,11 +255,11 @@ namespace TeaChat
             Array.Copy(data, 0, packet, 6, data.Length);
         }
 
-        public void makePacketBackgroundImage(int chatroomNumber, string filename, byte[] data)
+        public void makePacketBackgroundImage(int chatroomIndex, string filename, byte[] data)
         {
             packet.Initialize();
             packet[0] = (byte)Commands.BackgroundImage;
-            packet[1] = (byte)chatroomNumber;
+            packet[1] = (byte)chatroomIndex;
             byte[] dataSize = BitConverter.GetBytes(data.Length);
             Array.Copy(dataSize, 0, packet, 2, 4);
             byte[] filenameByte = Encoding.UTF8.GetBytes(filename);
@@ -267,11 +267,11 @@ namespace TeaChat
             Array.Copy(data, 0, packet, 74, Math.Min(8118, data.Length)); // TODO: 分割封包
         }
 
-        public void makePacketFile(int chatroomNumber, string filename, byte[] data)
+        public void makePacketFile(int chatroomIndex, string filename, byte[] data)
         {
             packet.Initialize();
             packet[0] = (byte)Commands.File;
-            packet[1] = (byte)chatroomNumber;
+            packet[1] = (byte)chatroomIndex;
             byte[] dataSize = BitConverter.GetBytes(data.Length);
             Array.Copy(dataSize, 0, packet, 2, 4);
             byte[] filenameByte = Encoding.UTF8.GetBytes(filename);

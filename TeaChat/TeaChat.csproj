@@ -67,6 +67,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Audio\AudioHandler.cs" />
+    <Compile Include="Audio\ConferenceCallWindow.xaml.cs">
+      <DependentUpon>ConferenceCallWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LogInWindow.xaml.cs">
       <DependentUpon>LogInWindow.xaml</DependentUpon>
     </Compile>
@@ -76,6 +79,10 @@
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
+    <Page Include="Audio\ConferenceCallWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LogInWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -124,6 +131,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Audio\Images\on_call.png" />
+    <Resource Include="Audio\Images\to_end.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
