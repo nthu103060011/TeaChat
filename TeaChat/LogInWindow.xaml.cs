@@ -14,6 +14,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using TeaChat.Uitlity;
 
 namespace TeaChat
 {
@@ -22,6 +26,10 @@ namespace TeaChat
     /// </summary>
     public partial class LogInWindow : Window
     {
+        ChatSocket client;
+
+        StrHandler msgHandler;
+
         List<ChatWindow> chatWindows = new List<ChatWindow>();
 
         public List<string> userList;
@@ -50,10 +58,16 @@ namespace TeaChat
             else if (logIn(textBoxUsername.Text) == false)
                 MessageBox.Show("登入失敗\nServer沒開或帳號錯誤");
         }
+      
         private bool logIn(string username)
         {
             // TODO: 連線到server，如果沒連上，connectSuccess設為false
-            bool connectSuccess = true;
+            bool connectSuccess;
+            client = ChatSocket.connect(ChatSetting.serverIp);
+            if (client == null)
+                connectSuccess = false;
+            else
+                connectSuccess = true;
             //
 
             if (connectSuccess)
@@ -213,7 +227,7 @@ namespace TeaChat
             byte[] dataSand = packet.getPacket();
 
             // TODO: 傳送 dataSand 給 server
-
+            client.send(  " : " + dataSand);
             //
         }
     }

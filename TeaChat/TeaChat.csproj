@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="Packet.cs" />
     <Compile Include="Uitlity\ArrayUtility.cs" />
+    <Compile Include="Uitlity\ChatLib.cs" />
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
