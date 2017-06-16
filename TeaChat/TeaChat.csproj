@@ -71,6 +71,7 @@
     <Compile Include="Audio\ConferenceCallWindow.xaml.cs">
       <DependentUpon>ConferenceCallWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChatroomInfo.cs" />
     <Compile Include="LogInWindow.xaml.cs">
       <DependentUpon>LogInWindow.xaml</DependentUpon>
     </Compile>
