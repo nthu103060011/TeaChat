@@ -38,7 +38,7 @@ namespace TeaChat
         
         private List<string> chatFriends;
 
-        private ConferenceCallWindow conf_call_window = new ConferenceCallWindow();
+        private ConferenceCallWindow conf_call_window = null;// = new ConferenceCallWindow();
 
         public ChatWindow(List<string> chatFriends, LogInWindow homeWindow)
         {
@@ -373,12 +373,48 @@ namespace TeaChat
         #endregion
 
         #region conference call
-        private void conferenceCallButton_Click(object sender, RoutedEventArgs e)
+        public void SetupConferenceCallWindow()
         {
-            if (!this.conf_call_window.IsLoaded)
+            if (this.conf_call_window == null)
             {
+                this.conf_call_window = new ConferenceCallWindow();
+                this.conf_call_window.SetSocketandChatRoom(this.homeWindow, this);
                 this.conf_call_window.Show();
             }
+            else
+            {
+                if (!this.conf_call_window.IsLoaded)
+                {
+                    this.conf_call_window = new ConferenceCallWindow();
+                    this.conf_call_window.SetSocketandChatRoom(this.homeWindow, this);
+                    this.conf_call_window.Show();
+                }
+            }
+        }
+
+        public void ConferenceCallOn()
+        {
+            if (this.conf_call_window == null) return;
+            if (!this.conf_call_window.IsLoaded) return;
+
+            this.conf_call_window.SetConferenceCallStateOnChat();
+        }
+
+        public void PlayAudioData(byte[] data, int data_size)
+        {
+            if(this.conf_call_window == null) return;
+            if (!this.conf_call_window.IsLoaded) return;
+
+            this.conf_call_window.PlayAudioData(data, data_size);
+        }
+
+        private void conferenceCallButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.SetupConferenceCallWindow();
+
+            Packet packet = new Packet();
+            packet.MakeOpenConfCallPakcet(0);
+            this.homeWindow.sendToServer(this, packet);
         }
         #endregion
     }

@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeaChat.Audio"
         mc:Ignorable="d"
-        Title="Tea Chat" Height="300" Width="220">
+        Title="Tea Chat" Height="320" Width="250" Closed="Window_Closed" Background="White">
     <Grid>
-        <Image x:Name="stateImage" Height="100" Margin="56,120,56,23" Width="100"/>
+        <Image x:Name="stateImage" Height="110" Margin="51,120,51,23" Width="110"/>
         <TextBox x:Name="stateTextBox" HorizontalAlignment="Stretch" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Width="128" Margin="0,50,0,0" FontSize="18" FontFamily="Yu Gothic UI Semibold" FontWeight="Bold" TextAlignment="Center"/>
-        <Button x:Name="stateButton" Content="" Margin="56,120,56,23" Width="100" Height="100" ClickMode="Press" Click="stateButton_Click" BorderBrush="White" Background="#FFFFFEFE"/>
+        <Button x:Name="stateButton" Content="" Margin="51,120,51,23" Width="110" Height="110" ClickMode="Press" Click="stateButton_Click" BorderBrush="White" Background="#FFFFFEFE"/>
 
     </Grid>
 </Window>
