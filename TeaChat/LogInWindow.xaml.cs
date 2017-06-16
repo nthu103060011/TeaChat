@@ -62,15 +62,11 @@ namespace TeaChat
         private bool logIn(string username)
         {
             myName = username;
-
-            // TODO: 連線到server，如果沒連上，connectSuccess設為false
+            
             bool connectSuccess;
             client = ChatSocket.connect(ChatSetting.serverIp);
-            if (client == null)
-                connectSuccess = false;
-            else
-                connectSuccess = true;
-            //
+            if (client == null) connectSuccess = false;
+            else connectSuccess = true;
 
             if (connectSuccess)
             {
@@ -87,14 +83,8 @@ namespace TeaChat
                     this.Title = "TeaChat - " + username;
                     stackPanelLogIn.Visibility = Visibility.Collapsed;
                     gridHome.Visibility = Visibility.Visible;
-
-                    // TODO: 新增 thread 去跑 receiveFromServer() 接收 server的訊息
+                    
                     client.newListener(receiveFromServer);
-                    //
-
-                    //假裝在這時收到server傳來使用者名單
-                    //receiveFromServer();
-                    //
 
                     return true;
                 }
@@ -157,9 +147,6 @@ namespace TeaChat
 
         private void receiveFromServer(byte[] dataReceive)
         {
-            // TODO: 接收dataReceive
-            //byte[] dataReceive = new byte[8192];
-            //
             Packet packet = new Packet(dataReceive);
             Packet.Commands command = packet.getCommand();
             int chatroomIndex = packet.getChatroomIndex();
@@ -243,10 +230,8 @@ namespace TeaChat
                 chatroomIndex = -1;
             packet.changeChatroomIndex(chatroomIndex);
             byte[] dataSand = packet.getPacket();
-
-            // TODO: 傳送 dataSand 給 server
+            
             client.send(dataSand);
-            //
         }
     }
 }
