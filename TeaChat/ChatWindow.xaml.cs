@@ -373,21 +373,48 @@ namespace TeaChat
         #endregion
 
         #region conference call
-        private void conferenceCallButton_Click(object sender, RoutedEventArgs e)
+        public void SetupConferenceCallWindow()
         {
-            if (conf_call_window == null)
+            if (this.conf_call_window == null)
             {
-                conf_call_window = new ConferenceCallWindow();
+                this.conf_call_window = new ConferenceCallWindow();
+                this.conf_call_window.SetSocketandChatRoom(this.homeWindow, this);
                 this.conf_call_window.Show();
             }
             else
             {
-                if (!conf_call_window.IsLoaded)
+                if (!this.conf_call_window.IsLoaded)
                 {
-                    conf_call_window = new ConferenceCallWindow();
-                    conf_call_window.Show();
+                    this.conf_call_window = new ConferenceCallWindow();
+                    this.conf_call_window.SetSocketandChatRoom(this.homeWindow, this);
+                    this.conf_call_window.Show();
                 }
             }
+        }
+
+        public void ConferenceCallOn()
+        {
+            if (this.conf_call_window == null) return;
+            if (!this.conf_call_window.IsLoaded) return;
+
+            this.conf_call_window.SetConferenceCallStateOnChat();
+        }
+
+        public void PlayAudioData(byte[] data, int data_size)
+        {
+            if(this.conf_call_window == null) return;
+            if (!this.conf_call_window.IsLoaded) return;
+
+            this.conf_call_window.PlayAudioData(data, data_size);
+        }
+
+        private void conferenceCallButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.SetupConferenceCallWindow();
+
+            Packet packet = new Packet();
+            packet.MakeOpenConfCallPakcet(0);
+            this.homeWindow.sendToServer(this, packet);
         }
         #endregion
     }

@@ -34,6 +34,11 @@ namespace TeaChat.Audio
             this.SetConferenceCallStateOnCall();
         }
 
+        public void SetSocketandChatRoom(LogInWindow home_window, ChatWindow chat_room)
+        {
+            this.audio_handler.SetAudioPacketHandler(home_window, chat_room);
+        }
+
         ~ConferenceCallWindow()
         {
             this.SetConferenceCallStateToEnd();
@@ -43,7 +48,7 @@ namespace TeaChat.Audio
         /// Set state of conference call to on-call state.
         /// Wait for the connect to conference call.
         /// </summary>
-        private void SetConferenceCallStateOnCall()
+        public void SetConferenceCallStateOnCall()
         {
             // set state to on call
             this.conf_call_state = CC_STATE_ON_CALL;
@@ -63,7 +68,7 @@ namespace TeaChat.Audio
         /// Set state of conference call to on-chat state
         /// Chat on conference call.
         /// </summary>
-        private void SetConferenceCallStateOnChat()
+        public void SetConferenceCallStateOnChat()
         {
             this.audio_handler.Enable();
 
@@ -84,12 +89,17 @@ namespace TeaChat.Audio
         /// Set state of conference call to to-end state
         /// Close conference call.
         /// </summary>
-        private void SetConferenceCallStateToEnd()
+        public void SetConferenceCallStateToEnd()
         {
             // set state to to end
             this.conf_call_state = CC_STATE_TO_END;
 
             this.audio_handler.Disable();
+        }
+
+        public void PlayAudioData(byte[] data, int data_size)
+        {
+            this.audio_handler.SetStreamingAudioData(data, data_size);
         }
 
         private void InitializeImages()
@@ -127,7 +137,7 @@ namespace TeaChat.Audio
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            this.audio_handler.Disable();
+            this.SetConferenceCallStateToEnd();
         }
     }
 }

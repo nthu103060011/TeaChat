@@ -12,7 +12,7 @@ namespace TeaChat.Audio
         private ChatWindow chat_room;
 
         // socket
-        LogInWindow home_window;
+        private LogInWindow home_window;
 
         private int packet_size = 0;
         private byte[] packet_buff = new byte[Packet.PACKET_MAX_SIZE];

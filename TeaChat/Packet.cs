@@ -32,6 +32,9 @@ namespace TeaChat
             TextMessage,    // int chatroomIndex, string fromWho, string text
             BackgroundImage,// int chatroomIndex, string filename, byte[] data
             File,           // int chatroomIndex, string filename, byte[] data
+            OpenConferneceCall, // client-to-server first then server-to-client
+            ParticipateConferenceCall, // client-to-server
+            ConferenceCallOn, // server-to-client
             AudioData,      // char room number, data
         }
 
@@ -74,6 +77,11 @@ namespace TeaChat
         public int getDataSize()
         {
             return BitConverter.ToInt32(packet, 2);
+        }
+
+        public int GetPacketBody(byte[] buff)
+        {
+            return ArrayUtility.CopyByteArray(buff, 0, this.packet, 2, this.getDataSize() + PACKET_HEADER_SIZE);
         }
 
         #region getPacketData
@@ -303,6 +311,18 @@ namespace TeaChat
             byte[] filenameByte = Encoding.UTF8.GetBytes(filename);
             Array.Copy(filenameByte, 0, packet, 6, filenameByte.Length);
             Array.Copy(data, 0, packet, 74, Math.Min(8118, data.Length)); // TODO: 分割封包
+        }
+
+        public void MakeOpenConfCallPakcet(int chat_room_num)
+        {
+            this.packet[0] = (byte)Commands.OpenConferneceCall;
+            this.packet[1] = (byte)chat_room_num;
+        }
+
+        public void MakePartConfCallPacket(int chat_room_num)
+        {
+            this.packet[0] = (byte)Commands.ParticipateConferenceCall;
+            this.packet[1] = (byte)chat_room_num;
         }
 
         public static int CreateAudioPacket(byte[] buff, int chat_room_num, byte[] data, int data_size)
