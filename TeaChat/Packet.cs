@@ -55,12 +55,12 @@ namespace TeaChat
             return (Commands)packet[0];
         }
 
-        public int getChatroomNumber()
+        public int getChatroomIndex()
         {
             return packet[1];
         }
 
-        public void changeChatroomNumber(int chatroomNumber)
+        public void changeChatroomIndex(int chatroomNumber)
         {
             packet[1] = (byte)chatroomNumber;
         }
