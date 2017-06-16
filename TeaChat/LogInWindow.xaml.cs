@@ -139,10 +139,6 @@ namespace TeaChat
         }
         private bool startChat(List<string> chatFriends)
         {
-            Packet packet = new Packet();
-            packet.makePacketChatRequest(chatFriends);
-            sendToServer(null, packet);
-
             // TODO: 確認建立聊天是否成功
             bool startChatSuccess = true;
             //
@@ -150,6 +146,11 @@ namespace TeaChat
             {
                 ChatWindow newChatWindow = new ChatWindow(chatFriends, this);
                 chatWindows.Add(newChatWindow);
+
+                Packet packet = new Packet();
+                packet.makePacketChatRequest(chatFriends);
+                sendToServer(newChatWindow, packet);
+
                 newChatWindow.Show();
 
                 return true;
@@ -178,6 +179,11 @@ namespace TeaChat
                     ChatWindow newChatWindow = new ChatWindow(chatFriends, this);
                     MessageBox.Show("有新的聊天請求");
                     chatWindows.Add(newChatWindow);
+
+                    Packet registerChatwindowPacket = new Packet();
+                    registerChatwindowPacket.makePacketRegisterChatroom(0, chatroomIndex);
+                    sendToServer(newChatWindow, registerChatwindowPacket);
+
                     newChatWindow.Show();
                     break;
                 case Packet.Commands.LeaveChatroom:
