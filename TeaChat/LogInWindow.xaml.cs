@@ -167,11 +167,11 @@ namespace TeaChat
             switch (command)
             {
                 case Packet.Commands.UpdateUserList:
-                    userList = packet.getUpdateUserListData();
-                    //string s = "";
-                    //foreach (string ss in userList) s += ss + " ";
-                    //MessageBox.Show(s);
-                    listBoxOnlineUsers.ItemsSource = userList;
+                    userList = new List<string>(packet.getUpdateUserListData());
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        listBoxOnlineUsers.ItemsSource = userList;
+                    }));
                     break;
                 case Packet.Commands.ChatRequest:
                     List<string> chatFriends = packet.getChatRequestData();
