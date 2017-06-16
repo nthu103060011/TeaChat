@@ -97,6 +97,11 @@ namespace TeaChat.Audio
             this.audio_handler.Disable();
         }
 
+        public void PlayAudioData(byte[] data, int data_size)
+        {
+            this.audio_handler.SetStreamingAudioData(data, data_size);
+        }
+
         private void InitializeImages()
         {
             try

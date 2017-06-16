@@ -400,6 +400,14 @@ namespace TeaChat
             this.conf_call_window.SetConferenceCallStateOnChat();
         }
 
+        public void PlayAudioData(byte[] data, int data_size)
+        {
+            if(this.conf_call_window == null) return;
+            if (!this.conf_call_window.IsLoaded) return;
+
+            this.conf_call_window.PlayAudioData(data, data_size);
+        }
+
         private void conferenceCallButton_Click(object sender, RoutedEventArgs e)
         {
             this.SetupConferenceCallWindow();

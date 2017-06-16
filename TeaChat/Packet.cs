@@ -78,6 +78,11 @@ namespace TeaChat
             return BitConverter.ToInt32(packet, 2);
         }
 
+        public int GetPacketBody(byte[] buff)
+        {
+            return ArrayUtility.CopyByteArray(buff, 0, this.packet, 2, this.getDataSize() + PACKET_HEADER_SIZE);
+        }
+
         #region getPacketData
         public string getReportNameData()
         {

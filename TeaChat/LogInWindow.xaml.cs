@@ -218,6 +218,11 @@ namespace TeaChat
                 case Packet.Commands.ConferenceCallOn:
                     this.chatWindows[chatroomIndex].ConferenceCallOn();
                     break;
+                case Packet.Commands.AudioData:
+                    byte[] data = new byte[Packet.PACKET_MAX_SIZE];
+                    int data_size = packet.GetPacketBody(data);
+                    this.chatWindows[chatroomIndex].PlayAudioData(data, data_size);
+                    break;
                 default:
                     MessageBox.Show("Server傳了未知指令");
                     break;
