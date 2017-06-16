@@ -209,6 +209,15 @@ namespace TeaChat
                     byte[] filedata = packet.getFileData();
                     chatWindows[chatroomIndex].receiveFile(filename, filedata);
                     break;
+                case Packet.Commands.OpenConferneceCall:
+                    this.chatWindows[chatroomIndex].SetupConferenceCallWindow();
+                    Packet rp_packet = new Packet();
+                    rp_packet.MakePratConfCallPacket(chatroomIndex);
+                    this.sendToServer(this.chatWindows[chatroomIndex], rp_packet);
+                    break;
+                case Packet.Commands.ConferenceCallOn:
+                    this.chatWindows[chatroomIndex].ConferenceCallOn();
+                    break;
                 default:
                     MessageBox.Show("Server傳了未知指令");
                     break;

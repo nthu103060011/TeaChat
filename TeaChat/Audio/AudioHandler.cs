@@ -14,6 +14,8 @@ namespace TeaChat.Audio
         private WaveOut audio_player;
         private BufferedWaveProvider audio_out_provider;
 
+        private AudioPacketHandler audio_packet_handler;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -88,11 +90,16 @@ namespace TeaChat.Audio
         }
         #endregion
 
+        public void SetAudioPacketHandler(LogInWindow home_window, ChatWindow chat_room)
+        {
+            this.audio_packet_handler = new AudioPacketHandler(home_window, chat_room);
+        }
+        
         #region audio data available event
         void AudioDataAvailable(object sender, WaveInEventArgs e)
         {
             // form data into packet and send packet to server
-
+            this.audio_packet_handler.SendAudioPacket(e.Buffer, e.BytesRecorded);
 
             // sudo operation
             //this.SetStreamingAudioData(e.Buffer, e.BytesRecorded);
