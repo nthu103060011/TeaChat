@@ -89,7 +89,7 @@ namespace TeaChat.Audio
             // set state to to end
             this.conf_call_state = CC_STATE_TO_END;
 
-            this.audio_handler.Enable();
+            this.audio_handler.Disable();
         }
 
         private void InitializeImages()

@@ -1,4 +1,5 @@
 ﻿using System;
+using NAudio;
 using NAudio.Wave;
 
 namespace TeaChat.Audio
@@ -10,7 +11,7 @@ namespace TeaChat.Audio
     {
         private WaveIn audio_recoder;
 
-        private DirectSoundOut audio_player;
+        private WaveOut audio_player;
         private BufferedWaveProvider audio_out_provider;
 
         /// <summary>
@@ -27,10 +28,16 @@ namespace TeaChat.Audio
             this.audio_out_provider.DiscardOnBufferOverflow = true;
 
             // inotialize audio data player
-            this.audio_player = new DirectSoundOut();
+            this.audio_player = new WaveOut();
             this.audio_player.Init(this.audio_out_provider);
         }
 
+        ~AudioHandler()
+        {
+            this.Disable();
+        }
+
+        #region set output streaming audio data
         /// <summary>
         /// Input data into output streaming of media device.
         /// </summary>
@@ -49,7 +56,9 @@ namespace TeaChat.Audio
             this.audio_player.Play();
             //System.Console.WriteLine("Play voice");
         }
+        #endregion
 
+        #region control functionality
         /// <summary>
         /// Start recording from micorphone and playing audio data to media device
         /// </summary>
@@ -63,6 +72,10 @@ namespace TeaChat.Audio
             {
                 System.Console.WriteLine(e.ToString()); // debug
             }
+            catch(MmException e)
+            {
+                Console.WriteLine(e.ToString()); // debug
+            }
         }
 
         /// <summary>
@@ -73,12 +86,17 @@ namespace TeaChat.Audio
             this.audio_recoder.StopRecording();
             this.audio_player.Stop();
         }
+        #endregion
 
+        #region audio data available event
         void AudioDataAvailable(object sender, WaveInEventArgs e)
         {
             // form data into packet and send packet to server
+
+
             // sudo operation
-            this.SetStreamingAudioData(e.Buffer, e.BytesRecorded);
+            //this.SetStreamingAudioData(e.Buffer, e.BytesRecorded);
         }
+        #endregion
     }
 }

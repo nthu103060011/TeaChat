@@ -35,5 +35,19 @@ namespace TeaChat.Uitlity
 
             return copy_size;
         }
+
+        public static int ZeroByteArray(byte[] buff)
+        {
+            if (buff == null) throw new ArgumentNullException();
+
+            int index = 0;
+
+            for (index = 0; index < buff.Length; index++)
+            {
+                buff[index] = 0x00;
+            }
+
+            return index;
+        }
     }
 }

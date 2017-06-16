@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using TeaChat.Uitlity;
 
 namespace TeaChat
 {
     public class Packet
     {
         byte[] packet;
+
+        public static readonly int PACKET_MAX_SIZE = 8192;
+        public static readonly int PACKET_HEADER_SIZE = 6;
+        public static readonly int PACKET_MAX_BODY_SIZE = PACKET_MAX_SIZE - PACKET_HEADER_SIZE;
 
         public enum Commands
         {
@@ -26,16 +31,18 @@ namespace TeaChat
             TextMessage,    // int chatroomNumber, string fromWho, string text
             BackgroundImage,// int chatroomNumber, string filename, byte[] data
             File,           // int chatroomNumber, string filename, byte[] data
+            AudioData,      // char room number, data
         }
 
         public Packet()
         {
-            packet = new byte[8192];
+            packet = new byte[PACKET_MAX_SIZE];
         }
 
         public Packet(byte[] packet)
         {
-            this.packet = packet;
+            this.packet = new byte[PACKET_MAX_SIZE];
+            this.SetPacket(packet);
         }
 
         public byte[] getPacket()
@@ -56,6 +63,11 @@ namespace TeaChat
         public void changeChatroomNumber(int chatroomNumber)
         {
             packet[1] = (byte)chatroomNumber;
+        }
+
+        public void SetPacket(byte[] buff)
+        {
+           ArrayUtility.CopyByteArray(this.packet, 0, buff, 0, buff.Length);
         }
 
         public int getDataSize()
@@ -277,6 +289,31 @@ namespace TeaChat
             byte[] filenameByte = Encoding.UTF8.GetBytes(filename);
             Array.Copy(filenameByte, 0, packet, 6, filenameByte.Length);
             Array.Copy(data, 0, packet, 74, Math.Min(8118, data.Length)); // TODO: 分割封包
+        }
+
+        public static int CreateAudioPacket(byte[] buff, int chat_room_num, byte[] data, int data_size)
+        {
+            if (buff == null || data == null) throw new ArgumentNullException();
+            if (buff.Length < data_size + PACKET_HEADER_SIZE) return -1;
+
+            int packet_size = 0;
+
+            ArrayUtility.ZeroByteArray(buff);
+
+            buff[0] = (byte)Commands.AudioData;
+            buff[1] = (byte)chat_room_num;
+            packet_size += 2;
+            
+            byte[] data_size_num_to_bytes = BitConverter.GetBytes(data_size);
+            packet_size += ArrayUtility.CopyByteArray(
+                buff, packet_size,
+                data_size_num_to_bytes, 0, data_size_num_to_bytes.Length
+                );
+
+
+            packet_size += ArrayUtility.CopyByteArray(buff, packet_size, data, 0, data_size);
+
+            return packet_size;
         }
         #endregion
 
