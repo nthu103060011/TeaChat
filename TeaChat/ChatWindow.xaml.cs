@@ -58,7 +58,7 @@ namespace TeaChat
                 labelFriends.Header += " " + friendName;
             }
 
-            //echoWindow.Show();
+            echoWindow.Show();
         }
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -74,15 +74,28 @@ namespace TeaChat
         #region 畫圖及清除
         private void InkCanvas_StrokeCollected(object sender, InkCanvasStrokeCollectedEventArgs e)
         {
-            string drawingAttributesText = JsonConvert.SerializeObject(e.Stroke.DrawingAttributes);
-            string stylusPointsText = JsonConvert.SerializeObject(e.Stroke.StylusPoints);
+            int pointsCount = e.Stroke.StylusPoints.Count;
+            int sentPointsCount = 0;
+            while (pointsCount - sentPointsCount > 0)
+            {
+                StylusPointCollection stylusPointsOnePacket = new StylusPointCollection();
+                for (int i = sentPointsCount; i < sentPointsCount + 80 && i < pointsCount; i++)
+                {
+                    stylusPointsOnePacket.Add(e.Stroke.StylusPoints[i]);
+                }
+                string drawingAttributesText = JsonConvert.SerializeObject(e.Stroke.DrawingAttributes);
+                string stylusPointsText = JsonConvert.SerializeObject(stylusPointsOnePacket);
+                File.WriteAllText(sentPointsCount + ".txt", stylusPointsText);
 
-            // 傳送 drawingAttributesText, stylusPointsText 兩段 string 給 server
-            Packet packet = new Packet();
-            packet.makePacketAddStroke(0, drawingAttributesText, stylusPointsText);
-            homeWindow.sendToServer(this, packet);
-            echoWindow.receiveStroke(drawingAttributesText, stylusPointsText);
-            //
+                // 傳送 drawingAttributesText, stylusPointsText 兩段 string 給 server
+                Packet packet = new Packet();
+                packet.makePacketAddStroke(0, drawingAttributesText, stylusPointsText);
+                homeWindow.sendToServer(this, packet);
+                echoWindow.receiveStroke(drawingAttributesText, stylusPointsText);
+                //
+
+                sentPointsCount += 80;
+            }
         }
 
         private void menuItemEraseAll_Click(object sender, RoutedEventArgs e)
