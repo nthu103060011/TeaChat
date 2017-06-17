@@ -20,7 +20,7 @@ namespace TeaChat.Audio
 
         private int conf_call_state = 0;
 
-        private AudioHandler audio_handler = new AudioHandler();
+        private AudioHandler audio_handler = null;
 
         private BitmapImage on_call_image = null;
         private BitmapImage to_end_image = null;
@@ -30,6 +30,14 @@ namespace TeaChat.Audio
             InitializeComponent();
 
             this.InitializeImages();
+
+            try
+            {
+                this.audio_handler = new AudioHandler();
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
 
             this.SetConferenceCallStateOnCall();
         }
@@ -70,7 +78,8 @@ namespace TeaChat.Audio
         /// </summary>
         public void SetConferenceCallStateOnChat()
         {
-            this.audio_handler.Enable();
+            if (this.audio_handler != null)
+                this.audio_handler.Enable();
 
             // set state to on chat
             this.conf_call_state = CC_STATE_ON_CHAT;
@@ -94,12 +103,14 @@ namespace TeaChat.Audio
             // set state to to end
             this.conf_call_state = CC_STATE_TO_END;
 
-            this.audio_handler.Disable();
+            if (this.audio_handler != null)
+                this.audio_handler.Disable();
         }
 
         public void PlayAudioData(byte[] data, int data_size)
         {
-            this.audio_handler.SetStreamingAudioData(data, data_size);
+            if (this.audio_handler != null)
+                this.audio_handler.SetStreamingAudioData(data, data_size);
         }
 
         private void InitializeImages()
