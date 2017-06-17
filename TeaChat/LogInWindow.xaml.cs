@@ -181,7 +181,10 @@ namespace TeaChat
                     break;
                 case Packet.Commands.LeaveChatroom:
                     string leavingFriend = packet.getLeavingFriendData();
-                    chatWindows[chatroomIndex].receiveLeavingFriend(leavingFriend);
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        chatWindows[chatroomIndex].receiveLeavingFriend(leavingFriend);
+                    }));
                     break;
                 case Packet.Commands.AddStroke:
                     string[] strokeString = packet.getAddStrokeData();
@@ -189,14 +192,12 @@ namespace TeaChat
                     {
                         chatWindows[chatroomIndex].receiveStroke(strokeString);
                     }));
-                   
                     break;
                 case Packet.Commands.EraseAll:
                     Dispatcher.BeginInvoke(new Action(delegate ()
                     {
                         chatWindows[chatroomIndex].receiveErase();
                     }));
-                    
                     break;
                 case Packet.Commands.AddTextBox:
                     string[] textBoxString = packet.getAddTextBoxData();
@@ -204,7 +205,6 @@ namespace TeaChat
                     {
                         chatWindows[chatroomIndex].receiveTextBox(textBoxString);
                     }));
-                    
                     break;
                 case Packet.Commands.TextMessage:
                     string[] textMessageString = packet.getTextMessageData();
@@ -212,7 +212,6 @@ namespace TeaChat
                     {
                         chatWindows[chatroomIndex].receiveTextMessage(textMessageString);
                     }));
-                    
                     break;
                 case Packet.Commands.BackgroundImage:
                     string imageFilename = packet.getFilename();
@@ -222,7 +221,6 @@ namespace TeaChat
                     {
                         chatWindows[chatroomIndex].receiveBackgroundImage(imageFilename, imageSerialNumber, imageFiledata);
                     }));
-                    
                     break;
                 case Packet.Commands.File:
                     string filename = packet.getFilename();
@@ -232,7 +230,6 @@ namespace TeaChat
                     {
                         chatWindows[chatroomIndex].receiveFile(filename, serialNumber, filedata);
                     }));
-                    
                     break;
                 case Packet.Commands.OpenConferenceCall: // peer
                     Dispatcher.BeginInvoke(
