@@ -161,16 +161,22 @@ namespace TeaChat
                     }));
                     break;
                 case Packet.Commands.ChatRequest:
-                    List<string> chatFriends = packet.getChatRequestData();
-                    ChatWindow newChatWindow = new ChatWindow(chatFriends, this);
                     MessageBox.Show("有新的聊天請求");
-                    chatWindows.Add(newChatWindow);
-
-                    Packet registerChatwindowPacket = new Packet();
-                    registerChatwindowPacket.makePacketRegisterChatroom(0, chatroomIndex);
-                    sendToServer(newChatWindow, registerChatwindowPacket);
-
-                    newChatWindow.Show();
+                    List<string> chatFriends = packet.getChatRequestData();
+                    ChatWindow newChatWindow;
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        newChatWindow = new ChatWindow(chatFriends, this);
+                        chatWindows.Add(newChatWindow);
+                        Packet registerChatwindowPacket = new Packet();
+                        registerChatwindowPacket.makePacketRegisterChatroom(0, chatroomIndex);
+                        sendToServer(newChatWindow, registerChatwindowPacket);
+                        newChatWindow.Show();
+                    }));
+                   
+                    
+      
+                    
                     break;
                 case Packet.Commands.LeaveChatroom:
                     string leavingFriend = packet.getFriendLeavingData();
