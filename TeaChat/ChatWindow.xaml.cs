@@ -35,6 +35,9 @@ namespace TeaChat
         TextBox textBoxInCanvas = new TextBox();
         bool creatingTextBox = false;
         bool editingText = false;
+        List<FileStream> writingStreamList = new List<FileStream>();
+        List<string> writingFilenameList = new List<string>();
+        List<bool> acceptFile = new List<bool>();
         
         private List<string> chatFriends;
 
@@ -66,7 +69,7 @@ namespace TeaChat
 
             // 告訴 server 離開聊天
             Packet packet = new Packet();
-            packet.makePacketLeaveChatroom(0);
+            packet.makePacketLeaveChatroom(0, homeWindow.myName);
             homeWindow.sendToServer(this, packet);
             //
         }
@@ -372,34 +375,107 @@ namespace TeaChat
             textBlock.Text += fromWho + ": " + text + "\n";
         }
 
-        public void receiveBackgroundImage(string filename, byte[] data)
+        public void receiveBackgroundImage(string filename, int serialNumber, byte[] data)
         {
-            // TODO: 把檔案拼起來
-            File.WriteAllBytes("Background Images\\" + filename, data);
-
-            BitmapImage imageSource = new BitmapImage(new Uri("Background Images\\" + filename));
-            Image image = new Image();
-            image.Source = imageSource;
-            if (imageSource.Width > inkCanvas.ActualWidth || imageSource.Height > inkCanvas.ActualHeight)
+            if (serialNumber == 0)
             {
-                image.Stretch = Stretch.Uniform;
-                image.MaxWidth = inkCanvas.ActualWidth;
-                image.MaxHeight = inkCanvas.ActualHeight;
+                FileStream writeStream = File.OpenWrite("Background Images\\" + filename);
+                writingStreamList.Add(writeStream);
+                writingFilenameList.Add(filename);
+                writeStream.Write(data, 0, 8118);
             }
-            inkCanvas.Children.Add(image);
+            else if (serialNumber == -1)
+            {
+                for (int i = 0; i < writingFilenameList.Count; i++)
+                    if (writingFilenameList[i] == filename)
+                    {
+                        writingStreamList[i].Close();
+                        writingStreamList.RemoveAt(i);
+                        writingFilenameList.RemoveAt(i);
+                        break;
+                    }
+
+                BitmapImage imageSource = new BitmapImage(new Uri("Background Images\\" + filename));
+                Image image = new Image();
+                image.Source = imageSource;
+                if (imageSource.Width > inkCanvas.ActualWidth || imageSource.Height > inkCanvas.ActualHeight)
+                {
+                    image.Stretch = Stretch.Uniform;
+                    image.MaxWidth = inkCanvas.ActualWidth;
+                    image.MaxHeight = inkCanvas.ActualHeight;
+                }
+                inkCanvas.Children.Add(image);
+            }
+            else
+            {
+                for (int i = 0; i < writingFilenameList.Count; i++)
+                    if (writingFilenameList[i] == filename) {
+                        writingStreamList[i].Write(data, 0, 8118);
+                        break; }
+            }
         }
 
-        public void receiveFile(string filename, byte[] data)
+        public void receiveFile(string filename, int serialNumber, byte[] data)
         {
-            // TODO: 把檔案拼起來
-            if (MessageBox.Show("是否要儲存其他人上傳的檔案: " + filename, "確認訊息", MessageBoxButton.YesNo)
-                == MessageBoxResult.Yes)
+            // TODO: acceptFile弄成list, 沒接受的 stream(null)和name也要加進list、移除
+            if (serialNumber == 0)
             {
-                VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
-                if (folderBrowserDialog.ShowDialog() == true)
+                if (MessageBox.Show("是否要儲存其他人上傳的檔案: " + filename, "確認訊息", MessageBoxButton.YesNo)
+                   == MessageBoxResult.Yes)
                 {
-                    string filepath = folderBrowserDialog.SelectedPath + "\\";
-                    File.WriteAllBytes(filepath + filename, data);
+                    VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
+                    if (folderBrowserDialog.ShowDialog() == true)
+
+                    {
+                        string filepath = folderBrowserDialog.SelectedPath + "\\";
+                        FileStream writeStream = File.OpenWrite(filepath + filename);
+                        acceptFile.Add(true);
+                        writingStreamList.Add(writeStream);
+                        writingFilenameList.Add(filename);
+                        writeStream.Write(data, 0, 8118);
+                    }
+                    else
+                    {
+                        acceptFile.Add(false);
+                        writingStreamList.Add(null);
+                        writingFilenameList.Add(filename);
+                    }
+                }
+                else
+                {
+                    acceptFile.Add(false);
+                    writingStreamList.Add(null);
+                    writingFilenameList.Add(filename);
+                }
+            }
+            else if (serialNumber == -1)
+            {
+                for (int i = 0; i < writingFilenameList.Count; i++)
+                {
+                    if (writingFilenameList[i] == filename)
+                    {
+                        if (acceptFile[i])
+                        {
+                            writingStreamList[i].Close();
+                            writingStreamList.RemoveAt(i);
+                            writingFilenameList.RemoveAt(i);
+                        }
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < writingFilenameList.Count; i++)
+                {
+                    if (writingFilenameList[i] == filename)
+                    {
+                        if (acceptFile[i])
+                        {
+                            writingStreamList[i].Write(data, 0, 8118);
+                        }
+                        break;
+                    }
                 }
             }
         }
