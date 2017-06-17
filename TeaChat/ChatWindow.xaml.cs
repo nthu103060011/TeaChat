@@ -331,6 +331,7 @@ namespace TeaChat
                 packetEOF.makePacketBackgroundImage(0, filename, -1, data, 0);
             else
                 packetEOF.makePacketFile(0, filename, -1, data, 0);
+            homeWindow.sendToServer(this, packetEOF);
 
             stream.Close();
         }
@@ -396,7 +397,7 @@ namespace TeaChat
                         break;
                     }
 
-                BitmapImage imageSource = new BitmapImage(new Uri("Background Images\\" + filename));
+                BitmapImage imageSource = new BitmapImage(new Uri("Background Images\\" + filename, UriKind.Relative));
                 Image image = new Image();
                 image.Source = imageSource;
                 if (imageSource.Width > inkCanvas.ActualWidth || imageSource.Height > inkCanvas.ActualHeight)
@@ -418,36 +419,14 @@ namespace TeaChat
 
         public void receiveFile(string filename, int serialNumber, byte[] data)
         {
-            // TODO: acceptFile弄成list, 沒接受的 stream(null)和name也要加進list、移除
             if (serialNumber == 0)
             {
-                if (MessageBox.Show("是否要儲存其他人上傳的檔案: " + filename, "確認訊息", MessageBoxButton.YesNo)
-                   == MessageBoxResult.Yes)
-                {
-                    VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
-                    if (folderBrowserDialog.ShowDialog() == true)
-
-                    {
-                        string filepath = folderBrowserDialog.SelectedPath + "\\";
-                        FileStream writeStream = File.OpenWrite(filepath + filename);
-                        acceptFile.Add(true);
-                        writingStreamList.Add(writeStream);
-                        writingFilenameList.Add(filename);
-                        writeStream.Write(data, 0, data.Length);
-                    }
-                    else
-                    {
-                        acceptFile.Add(false);
-                        writingStreamList.Add(null);
-                        writingFilenameList.Add(filename);
-                    }
-                }
-                else
-                {
-                    acceptFile.Add(false);
-                    writingStreamList.Add(null);
-                    writingFilenameList.Add(filename);
-                }
+                Directory.CreateDirectory("Download Files");
+                FileStream writeStream = File.OpenWrite("Download Files\\" + filename);
+                acceptFile.Add(true);
+                writingStreamList.Add(writeStream);
+                writingFilenameList.Add(filename);
+                writeStream.Write(data, 0, data.Length);
             }
             else if (serialNumber == -1)
             {
