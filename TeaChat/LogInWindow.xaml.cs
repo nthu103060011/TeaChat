@@ -36,6 +36,8 @@ namespace TeaChat
 
         public string myName;
 
+        public bool LoginIn = false;
+
         public LogInWindow()
         {
             InitializeComponent();
@@ -45,6 +47,14 @@ namespace TeaChat
         private void Window_Closed(object sender, EventArgs e)
         {
             // TODO: 如果還沒登出，要登出
+            if (LoginIn)
+            {
+                Packet packet = new Packet();
+                packet.makePacketLogOut();
+                sendToServer(null, packet);
+                LoginIn = false;
+                client.close();
+            }
 
             foreach (ChatWindow chatWindow in chatWindows)
                 chatWindow.Close();
@@ -70,6 +80,7 @@ namespace TeaChat
 
             if (connectSuccess)
             {
+                LoginIn = true;
                 Packet packet = new Packet();
                 packet.makePacketReportName(username);
                 sendToServer(null, packet);
@@ -98,6 +109,7 @@ namespace TeaChat
             packet.makePacketLogOut();
             sendToServer(null, packet);
             // TODO: 關閉連線
+            LoginIn = false;
             client.close();
             //
 
@@ -226,7 +238,7 @@ namespace TeaChat
                     }));
                     
                     break;
-                case Packet.Commands.OpenConferneceCall:
+                case Packet.Commands.OpenConferenceCall:
                     this.chatWindows[chatroomIndex].SetupConferenceCallWindow();
                     Packet rp_packet = new Packet();
                     rp_packet.MakePartConfCallPacket(chatroomIndex);

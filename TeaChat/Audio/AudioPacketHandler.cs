@@ -36,11 +36,11 @@ namespace TeaChat.Audio
         {
             
             // create new packet
-            this.packet_size = Packet.CreateAudioPacket(this.packet_buff, -1, data, data_size);
+            this.packet_size = Packet.CreateAudioPacket(this.packet_buff, 0, data, data_size);
             this.request_packet.SetPacket(this.packet_buff);
 
             // socket send
-            if (home_window != null)
+            if (this.home_window != null)
                 this.home_window.sendToServer(this.chat_room, this.request_packet);
         }
 

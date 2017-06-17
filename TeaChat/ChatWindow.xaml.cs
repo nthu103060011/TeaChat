@@ -333,7 +333,7 @@ namespace TeaChat
         }
         #endregion
 
-        #region 從server收到的命令 DONE
+         #region 從server收到的命令 DONE
         public void receiveStroke(string[] strokeString)
         {
             string drawingAttributesText = strokeString[0];
