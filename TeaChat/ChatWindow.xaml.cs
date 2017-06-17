@@ -58,7 +58,7 @@ namespace TeaChat
                 labelFriends.Header += " " + friendName;
             }
 
-            echoWindow.Show();
+            //echoWindow.Show();
         }
         private void Window_Closed(object sender, EventArgs e)
         {
