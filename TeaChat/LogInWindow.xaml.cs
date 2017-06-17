@@ -227,7 +227,7 @@ namespace TeaChat
                     }));
                     
                     break;
-                case Packet.Commands.OpenConferneceCall:
+                case Packet.Commands.OpenConferenceCall:
                     this.chatWindows[chatroomIndex].SetupConferenceCallWindow();
                     Packet rp_packet = new Packet();
                     rp_packet.MakePartConfCallPacket(chatroomIndex);

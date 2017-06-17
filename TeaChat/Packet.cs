@@ -32,7 +32,7 @@ namespace TeaChat
             TextMessage,    // int chatroomIndex, string fromWho, string text
             BackgroundImage,// int chatroomIndex, string filename, byte[] data
             File,           // int chatroomIndex, string filename, byte[] data
-            OpenConferneceCall, // client-to-server first then server-to-client
+            OpenConferenceCall, // client-to-server first then server-to-client
             ParticipateConferenceCall, // client-to-server
             ConferenceCallOn, // server-to-client
             AudioData,      // char room number, data
@@ -315,13 +315,19 @@ namespace TeaChat
 
         public void MakeOpenConfCallPakcet(int chat_room_num)
         {
-            this.packet[0] = (byte)Commands.OpenConferneceCall;
+            this.packet[0] = (byte)Commands.OpenConferenceCall;
             this.packet[1] = (byte)chat_room_num;
         }
 
         public void MakePartConfCallPacket(int chat_room_num)
         {
             this.packet[0] = (byte)Commands.ParticipateConferenceCall;
+            this.packet[1] = (byte)chat_room_num;
+        }
+
+        public void MakeConfCallOnPacket(int chat_room_num)
+        {
+            this.packet[0] = (byte)Commands.ConferenceCallOn;
             this.packet[1] = (byte)chat_room_num;
         }
 
