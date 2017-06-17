@@ -322,6 +322,7 @@ namespace TeaChat
         /// <param name="chat_room_index">index of chat room</param>
         public void MakeOpenConfCallPakcet(int chat_room_index)
         {
+            ArrayUtility.ZeroByteArray(this.packet);
             this.packet[0] = (byte)Commands.OpenConferenceCall;
             this.packet[1] = (byte)chat_room_index;
         }
@@ -334,6 +335,7 @@ namespace TeaChat
         /// <param name="chat_room_index">index of chat room</param>
         public void MakePartConfCallPacket(int chat_room_index)
         {
+            ArrayUtility.ZeroByteArray(this.packet);
             this.packet[0] = (byte)Commands.ParticipateConferenceCall;
             this.packet[1] = (byte)chat_room_index;
         }
@@ -346,6 +348,7 @@ namespace TeaChat
         /// <param name="chat_room_index">index of chat room</param>
         public void MakeConfCallOnPacket(int chat_room_index)
         {
+            ArrayUtility.ZeroByteArray(this.packet);
             this.packet[0] = (byte)Commands.ConferenceCallOn;
             this.packet[1] = (byte)chat_room_index;
         }
