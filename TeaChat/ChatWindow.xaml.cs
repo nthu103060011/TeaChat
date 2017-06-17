@@ -304,10 +304,32 @@ namespace TeaChat
 
         private void uploadFile(bool isBackgroundImage, string filePath)
         {
-            byte[] data = File.ReadAllBytes(filePath);
-            // TODO: 傳送檔案給 server
+            string[] split = filePath.Split('\\');
+            string filename = split.Last();
 
-            //
+            FileStream stream = File.OpenRead(filePath);
+            byte[] data = new byte[8118];
+            for (int i = 0; ; i++)
+            {
+                data.Initialize();
+                int bytesRead = stream.Read(data, 0, 8118);
+                if (bytesRead <= 0) break;
+                Packet packet = new Packet();
+                if (isBackgroundImage)
+                    packet.makePacketBackgroundImage(0, filename, i, data, bytesRead);
+                else
+                    packet.makePacketFile(0, filename, i, data, bytesRead);
+                homeWindow.sendToServer(this, packet);
+            }
+            
+            // EOF 封包的 Serial Number = -1
+            Packet packetEOF = new Packet();
+            if (isBackgroundImage)
+                packetEOF.makePacketBackgroundImage(0, filename, -1, data, 0);
+            else
+                packetEOF.makePacketFile(0, filename, -1, data, 0);
+
+            stream.Close();
         }
         #endregion
 
@@ -352,6 +374,7 @@ namespace TeaChat
 
         public void receiveBackgroundImage(string filename, byte[] data)
         {
+            // TODO: 把檔案拼起來
             File.WriteAllBytes("Background Images\\" + filename, data);
 
             BitmapImage imageSource = new BitmapImage(new Uri("Background Images\\" + filename));
@@ -368,6 +391,7 @@ namespace TeaChat
 
         public void receiveFile(string filename, byte[] data)
         {
+            // TODO: 把檔案拼起來
             if (MessageBox.Show("是否要儲存其他人上傳的檔案: " + filename, "確認訊息", MessageBoxButton.YesNo)
                 == MessageBoxResult.Yes)
             {

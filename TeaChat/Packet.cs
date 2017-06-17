@@ -251,7 +251,7 @@ namespace TeaChat
             byte[] data = Encoding.UTF8.GetBytes(json);
             byte[] dataSize = BitConverter.GetBytes(data.Length);
             Array.Copy(dataSize, 0, packet, 2, 4);
-            Array.Copy(data, 0, packet, 6, Math.Min(8186, data.Length)); // TODO: 分割封包
+            Array.Copy(data, 0, packet, 6, Math.Min(8186, data.Length));
         }
 
         public void makePacketEraseAll(int chatroomIndex)
@@ -289,28 +289,28 @@ namespace TeaChat
             Array.Copy(data, 0, packet, 6, data.Length);
         }
 
-        public void makePacketBackgroundImage(int chatroomIndex, string filename, byte[] data)
+        public void makePacketBackgroundImage(int chatroomIndex, string filename, int serialNumber, byte[] data, int dataSize)
         {
             packet.Initialize();
             packet[0] = (byte)Commands.BackgroundImage;
             packet[1] = (byte)chatroomIndex;
-            byte[] dataSize = BitConverter.GetBytes(data.Length);
-            Array.Copy(dataSize, 0, packet, 2, 4);
+            Array.Copy(BitConverter.GetBytes(dataSize), 0, packet, 2, 4);
             byte[] filenameByte = Encoding.UTF8.GetBytes(filename);
             Array.Copy(filenameByte, 0, packet, 6, filenameByte.Length);
-            Array.Copy(data, 0, packet, 74, Math.Min(8118, data.Length)); // TODO: 分割封包
+            Array.Copy(BitConverter.GetBytes(serialNumber), 0, packet, 70, 4);
+            Array.Copy(data, 0, packet, 74, Math.Min(8118, dataSize));
         }
 
-        public void makePacketFile(int chatroomIndex, string filename, byte[] data)
+        public void makePacketFile(int chatroomIndex, string filename, int serialNumber, byte[] data, int dataSize)
         {
             packet.Initialize();
             packet[0] = (byte)Commands.File;
             packet[1] = (byte)chatroomIndex;
-            byte[] dataSize = BitConverter.GetBytes(data.Length);
-            Array.Copy(dataSize, 0, packet, 2, 4);
+            Array.Copy(BitConverter.GetBytes(dataSize), 0, packet, 2, 4);
             byte[] filenameByte = Encoding.UTF8.GetBytes(filename);
             Array.Copy(filenameByte, 0, packet, 6, filenameByte.Length);
-            Array.Copy(data, 0, packet, 74, Math.Min(8118, data.Length)); // TODO: 分割封包
+            Array.Copy(BitConverter.GetBytes(serialNumber), 0, packet, 70, 4);
+            Array.Copy(data, 0, packet, 74, Math.Min(8118, dataSize));
         }
 
         #region conferecen call handshake packet creation

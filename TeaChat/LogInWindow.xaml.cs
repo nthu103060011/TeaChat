@@ -173,7 +173,6 @@ namespace TeaChat
                     }));
                     break;
                 case Packet.Commands.ChatRequest:
-                    MessageBox.Show("有新的聊天請求");
                     List<string> chatFriends = packet.getChatRequestData();
                     ChatWindow newChatWindow;
                     Dispatcher.BeginInvoke(new Action(delegate ()
