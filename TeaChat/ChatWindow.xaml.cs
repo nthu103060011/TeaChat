@@ -66,7 +66,7 @@ namespace TeaChat
 
             // 告訴 server 離開聊天
             Packet packet = new Packet();
-            packet.makePacketLogOut();
+            packet.makePacketLeaveChatroom(0);
             homeWindow.sendToServer(this, packet);
             //
         }
@@ -110,6 +110,7 @@ namespace TeaChat
             // 傳送 Erase 命令給 server
             Packet packet = new Packet();
             packet.makePacketEraseAll(0);
+            homeWindow.sendToServer(this, packet);
             echoWindow.receiveErase();
             //
         }

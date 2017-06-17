@@ -180,28 +180,52 @@ namespace TeaChat
                     break;
                 case Packet.Commands.AddStroke:
                     string[] strokeString = packet.getAddStrokeData();
-                    chatWindows[chatroomIndex].receiveStroke(strokeString);
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        chatWindows[chatroomIndex].receiveStroke(strokeString);
+                    }));
+                   
                     break;
                 case Packet.Commands.EraseAll:
-                    chatWindows[chatroomIndex].receiveErase();
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        chatWindows[chatroomIndex].receiveErase();
+                    }));
+                    
                     break;
                 case Packet.Commands.AddTextBox:
                     string[] textBoxString = packet.getAddTextBoxData();
-                    chatWindows[chatroomIndex].receiveTextBox(textBoxString);
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        chatWindows[chatroomIndex].receiveTextBox(textBoxString);
+                    }));
+                    
                     break;
                 case Packet.Commands.TextMessage:
                     string[] textMessageString = packet.getTextMessageData();
-                    chatWindows[chatroomIndex].receiveTextMessage(textMessageString);
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        chatWindows[chatroomIndex].receiveTextMessage(textMessageString);
+                    }));
+                    
                     break;
                 case Packet.Commands.BackgroundImage:
                     string imageFilename = packet.getFilename();
                     byte[] imageFiledata = packet.getFileData();
-                    chatWindows[chatroomIndex].receiveBackgroundImage(imageFilename, imageFiledata);
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        chatWindows[chatroomIndex].receiveBackgroundImage(imageFilename, imageFiledata);
+                    }));
+                    
                     break;
                 case Packet.Commands.File:
                     string filename = packet.getFilename();
                     byte[] filedata = packet.getFileData();
-                    chatWindows[chatroomIndex].receiveFile(filename, filedata);
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        chatWindows[chatroomIndex].receiveFile(filename, filedata);
+                    }));
+                    
                     break;
                 case Packet.Commands.OpenConferneceCall:
                     this.chatWindows[chatroomIndex].SetupConferenceCallWindow();
