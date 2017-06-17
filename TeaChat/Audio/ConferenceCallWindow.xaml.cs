@@ -131,7 +131,7 @@ namespace TeaChat.Audio
         {
             if (this.conf_call_state == CC_STATE_ON_CHAT)
             {
-                this.SetConferenceCallStateToEnd();
+                this.Close();
             }
         }
 
