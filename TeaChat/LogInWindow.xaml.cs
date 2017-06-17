@@ -46,7 +46,7 @@ namespace TeaChat
         }
         private void Window_Closed(object sender, EventArgs e)
         {
-            // TODO: 如果還沒登出，要登出
+            // 如果還沒登出，要登出
             if (LoginIn)
             {
                 Packet packet = new Packet();
@@ -108,7 +108,7 @@ namespace TeaChat
             Packet packet = new Packet();
             packet.makePacketLogOut();
             sendToServer(null, packet);
-            // TODO: 關閉連線
+            // 關閉連線
             LoginIn = false;
             client.close();
             //
@@ -132,28 +132,18 @@ namespace TeaChat
 
             if (selectedUsers.Count <= 0)
                 MessageBox.Show("請選擇聊天對象");
-            else if (startChat(selectedUsers) == false)
-                MessageBox.Show("建立聊天失敗");
+            startChat(selectedUsers);
         }
-        private bool startChat(List<string> chatFriends)
+        private void startChat(List<string> chatFriends)
         {
-            // TODO: 確認建立聊天是否成功
-            bool startChatSuccess = true;
-            //
-            if (startChatSuccess)
-            {
-                ChatWindow newChatWindow = new ChatWindow(chatFriends, this);
-                chatWindows.Add(newChatWindow);
+            ChatWindow newChatWindow = new ChatWindow(chatFriends, this);
+            chatWindows.Add(newChatWindow);
 
-                Packet packet = new Packet();
-                packet.makePacketChatRequest(chatFriends);
-                sendToServer(newChatWindow, packet);
+            Packet packet = new Packet();
+            packet.makePacketChatRequest(chatFriends);
+            sendToServer(newChatWindow, packet);
 
-                newChatWindow.Show();
-
-                return true;
-            }
-            return false;
+            newChatWindow.Show();
         }
         #endregion
 
@@ -190,7 +180,7 @@ namespace TeaChat
                     }));
                     break;
                 case Packet.Commands.LeaveChatroom:
-                    string leavingFriend = packet.getFriendLeavingData();
+                    string leavingFriend = packet.getLeavingFriendData();
                     chatWindows[chatroomIndex].receiveLeavingFriend(leavingFriend);
                     break;
                 case Packet.Commands.AddStroke:
@@ -227,18 +217,20 @@ namespace TeaChat
                 case Packet.Commands.BackgroundImage:
                     string imageFilename = packet.getFilename();
                     byte[] imageFiledata = packet.getFileData();
+                    int imageSerialNumber = packet.getFileSerialNumber();
                     Dispatcher.BeginInvoke(new Action(delegate ()
                     {
-                        chatWindows[chatroomIndex].receiveBackgroundImage(imageFilename, imageFiledata);
+                        chatWindows[chatroomIndex].receiveBackgroundImage(imageFilename, imageSerialNumber, imageFiledata);
                     }));
                     
                     break;
                 case Packet.Commands.File:
                     string filename = packet.getFilename();
                     byte[] filedata = packet.getFileData();
+                    int serialNumber = packet.getFileSerialNumber();
                     Dispatcher.BeginInvoke(new Action(delegate ()
                     {
-                        chatWindows[chatroomIndex].receiveFile(filename, filedata);
+                        chatWindows[chatroomIndex].receiveFile(filename, serialNumber, filedata);
                     }));
                     
                     break;

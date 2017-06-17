@@ -22,8 +22,7 @@ namespace TeaChat
             UpdateUserList, // List<string> onlineUsers
             ChatRequest,    // List<string> chatFriends
             RegisterChatroom,   // int chatroomIndex, int chatroomIndexOnServer
-            LeaveChatroom,  // int chatroomIndex
-            FriendLeaving,  // int chatroomIndex, string leavingFriend
+            LeaveChatroom,  // int chatroomIndex, string leavingFriend
             LogOut,
 
             AddStroke,      // int chatroomIndex, string drawingAttributesText, string stylusPointsText
@@ -116,7 +115,7 @@ namespace TeaChat
             return packet[2];
         }
 
-        public string getFriendLeavingData()
+        public string getLeavingFriendData()
         {
             int dataSize = getDataSize();
             byte[] data = new byte[dataSize];
@@ -166,6 +165,11 @@ namespace TeaChat
             Array.Copy(packet, 74, data, 0, dataSize);
             return data;
         }
+
+        public int getFileSerialNumber()
+        {
+            return BitConverter.ToInt32(packet, 70);
+        }
         #endregion
 
         #region makePacket
@@ -212,21 +216,12 @@ namespace TeaChat
             packet[2] = (byte)chatroomIndexOnServer;
         }
 
-        public void makePacketLeaveChatroom(int chatroomIndex)
+        public void makePacketLeaveChatroom(int chatroomIndex, string myName)
         {
             packet.Initialize();
             packet[0] = (byte)Commands.LeaveChatroom;
             packet[1] = (byte)chatroomIndex;
-            byte[] dataSize = BitConverter.GetBytes(0);
-            Array.Copy(dataSize, 0, packet, 2, 4);
-        }
-
-        public void makePacketFriendLeaving(int chatroomIndex, string leavingFriend)
-        {
-            packet.Initialize();
-            packet[0] = (byte)Commands.FriendLeaving;
-            packet[1] = (byte)chatroomIndex;
-            byte[] data = Encoding.UTF8.GetBytes(leavingFriend);
+            byte[] data = Encoding.UTF8.GetBytes(myName);
             byte[] dataSize = BitConverter.GetBytes(data.Length);
             Array.Copy(dataSize, 0, packet, 2, 4);
             Array.Copy(data, 0, packet, 6, data.Length);
