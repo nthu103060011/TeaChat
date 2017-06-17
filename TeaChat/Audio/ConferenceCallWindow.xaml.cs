@@ -85,10 +85,10 @@ namespace TeaChat.Audio
             this.conf_call_state = CC_STATE_ON_CHAT;
 
             // set to-end image
-            this.stateImage.Source = this.to_end_image;
+            this.stateImage.Visibility = Visibility.Collapsed;
 
             // display state botton
-            this.stateButton.Visibility = Visibility.Hidden;
+            this.stateButton.Visibility = Visibility.Visible;
 
             // set state text to on-chat text
             this.stateTextBox.Text = CC_STATE_TEXT_ON_CHAT;
