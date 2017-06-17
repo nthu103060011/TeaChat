@@ -12,7 +12,7 @@ namespace TeaChat.Uitlity
 {
     public class ChatSetting
     {
-        public static String serverIp = "127.0.0.1";
+        public static String serverIp = "192.168.0.108"; //"127.0.0.1";
         public static int port = 9877;
     }
 

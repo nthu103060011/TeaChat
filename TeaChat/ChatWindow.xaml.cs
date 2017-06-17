@@ -379,10 +379,11 @@ namespace TeaChat
         {
             if (serialNumber == 0)
             {
+                Directory.CreateDirectory("Background Images");
                 FileStream writeStream = File.OpenWrite("Background Images\\" + filename);
                 writingStreamList.Add(writeStream);
                 writingFilenameList.Add(filename);
-                writeStream.Write(data, 0, 8118);
+                writeStream.Write(data, 0, data.Length);
             }
             else if (serialNumber == -1)
             {
@@ -410,7 +411,7 @@ namespace TeaChat
             {
                 for (int i = 0; i < writingFilenameList.Count; i++)
                     if (writingFilenameList[i] == filename) {
-                        writingStreamList[i].Write(data, 0, 8118);
+                        writingStreamList[i].Write(data, 0, data.Length);
                         break; }
             }
         }
@@ -432,7 +433,7 @@ namespace TeaChat
                         acceptFile.Add(true);
                         writingStreamList.Add(writeStream);
                         writingFilenameList.Add(filename);
-                        writeStream.Write(data, 0, 8118);
+                        writeStream.Write(data, 0, data.Length);
                     }
                     else
                     {
@@ -472,7 +473,7 @@ namespace TeaChat
                     {
                         if (acceptFile[i])
                         {
-                            writingStreamList[i].Write(data, 0, 8118);
+                            writingStreamList[i].Write(data, 0, data.Length);
                         }
                         break;
                     }
