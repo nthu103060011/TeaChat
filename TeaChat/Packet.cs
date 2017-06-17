@@ -308,25 +308,57 @@ namespace TeaChat
             Array.Copy(data, 0, packet, 74, Math.Min(8118, dataSize));
         }
 
-        public void MakeOpenConfCallPakcet(int chat_room_num)
+        #region conferecen call handshake packet creation
+        /// <summary>
+        /// Create packet that contains command of opening conference call.
+        /// No extra body data is in need.
+        /// This packet is created by client host or server.
+        /// </summary>
+        /// <param name="chat_room_index">index of chat room</param>
+        public void MakeOpenConfCallPakcet(int chat_room_index)
         {
+            ArrayUtility.ZeroByteArray(this.packet);
             this.packet[0] = (byte)Commands.OpenConferenceCall;
-            this.packet[1] = (byte)chat_room_num;
+            this.packet[1] = (byte)chat_room_index;
         }
 
-        public void MakePartConfCallPacket(int chat_room_num)
+        /// <summary>
+        /// Create packet that contains command of participating conference call.
+        /// No extra body data is in need.
+        /// This packet is only created and sent by client.
+        /// </summary>
+        /// <param name="chat_room_index">index of chat room</param>
+        public void MakePartConfCallPacket(int chat_room_index)
         {
+            ArrayUtility.ZeroByteArray(this.packet);
             this.packet[0] = (byte)Commands.ParticipateConferenceCall;
-            this.packet[1] = (byte)chat_room_num;
+            this.packet[1] = (byte)chat_room_index;
         }
 
-        public void MakeConfCallOnPacket(int chat_room_num)
+        /// <summary>
+        /// Create packet that contains command of conference call on.
+        /// No extra body data is in need.
+        /// This packet is only created and sent by server.
+        /// </summary>
+        /// <param name="chat_room_index">index of chat room</param>
+        public void MakeConfCallOnPacket(int chat_room_index)
         {
+            ArrayUtility.ZeroByteArray(this.packet);
             this.packet[0] = (byte)Commands.ConferenceCallOn;
-            this.packet[1] = (byte)chat_room_num;
+            this.packet[1] = (byte)chat_room_index;
         }
+        #endregion
 
-        public static int CreateAudioPacket(byte[] buff, int chat_room_num, byte[] data, int data_size)
+        #region audio packet creation
+        /// <summary>
+        /// Create packet that contain raw audio data into buffer.
+        /// </summary>
+        /// <param name="buff">buffer to load the packet</param>
+        /// <param name="chat_room_index">index of chat room</param>
+        /// <param name="data">audio data</param>
+        /// <param name="data_size">size of audio data</param>
+        /// <returns>size of packet</returns>
+        public static int CreateAudioPacket(byte[] buff, int chat_room_index, byte[] data, int data_size)
         {
             if (buff == null || data == null) throw new ArgumentNullException();
             if (buff.Length < data_size + PACKET_HEADER_SIZE) return -1;
@@ -336,7 +368,7 @@ namespace TeaChat
             ArrayUtility.ZeroByteArray(buff);
 
             buff[0] = (byte)Commands.AudioData;
-            buff[1] = (byte)chat_room_num;
+            buff[1] = (byte)chat_room_index;
             packet_size += 2;
             
             byte[] data_size_num_to_bytes = BitConverter.GetBytes(data_size);
@@ -350,6 +382,7 @@ namespace TeaChat
 
             return packet_size;
         }
+        #endregion
         #endregion
 
     }

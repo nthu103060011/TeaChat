@@ -152,7 +152,11 @@ namespace TeaChat
             Packet packet = new Packet(dataReceive);
             Packet.Commands command = packet.getCommand();
             int chatroomIndex = packet.getChatroomIndex();
-            
+
+            // debug
+            Console.Write("Recv command: "); Console.WriteLine(command);
+            Console.Write("Recv Chat room num: ");Console.WriteLine(chatroomIndex);
+
             switch (command)
             {
                 case Packet.Commands.UpdateUserList:
@@ -230,19 +234,42 @@ namespace TeaChat
                     }));
                     
                     break;
-                case Packet.Commands.OpenConferenceCall:
-                    this.chatWindows[chatroomIndex].SetupConferenceCallWindow();
+                case Packet.Commands.OpenConferenceCall: // peer
+                    Dispatcher.BeginInvoke(
+                        new Action(
+                            delegate()
+                            {
+                                this.chatWindows[chatroomIndex].SetupConferenceCallWindow();
+                            }
+                        )
+                    );
                     Packet rp_packet = new Packet();
                     rp_packet.MakePartConfCallPacket(chatroomIndex);
                     this.sendToServer(this.chatWindows[chatroomIndex], rp_packet);
+                    //Console.WriteLine("Get open conf call packet");
                     break;
                 case Packet.Commands.ConferenceCallOn:
-                    this.chatWindows[chatroomIndex].ConferenceCallOn();
+                    Dispatcher.BeginInvoke(
+                        new Action(
+                            delegate ()
+                            {
+                                this.chatWindows[chatroomIndex].ConferenceCallOn();
+                            }
+                        )
+                    );
+                    //Console.WriteLine("Get conf call on packet");
                     break;
                 case Packet.Commands.AudioData:
                     byte[] data = new byte[Packet.PACKET_MAX_SIZE];
                     int data_size = packet.GetPacketBody(data);
-                    this.chatWindows[chatroomIndex].PlayAudioData(data, data_size);
+                    Dispatcher.BeginInvoke(
+                        new Action(
+                            delegate ()
+                            {
+                                this.chatWindows[chatroomIndex].PlayAudioData(data, data_size);
+                            }
+                        )
+                    );
                     break;
                 default:
                    // MessageBox.Show("Server傳了未知指令");
@@ -259,7 +286,11 @@ namespace TeaChat
                 chatroomIndex = -1;
             packet.changeChatroomIndex(chatroomIndex);
             byte[] dataSand = packet.getPacket();
-            
+
+            // debug
+            Console.Write("Send command: "); Console.WriteLine(packet.getCommand());
+            Console.Write("Send Chat room num: "); Console.WriteLine(chatroomIndex);
+
             client.send(dataSand);
         }
     }
