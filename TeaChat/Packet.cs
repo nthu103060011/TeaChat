@@ -80,7 +80,7 @@ namespace TeaChat
 
         public int GetPacketBody(byte[] buff)
         {
-            return ArrayUtility.CopyByteArray(buff, 0, this.packet, 2, this.getDataSize() + PACKET_HEADER_SIZE);
+            return ArrayUtility.CopyByteArray(buff, 0, this.packet, PACKET_HEADER_SIZE, this.getDataSize() + PACKET_HEADER_SIZE);
         }
 
         #region getPacketData

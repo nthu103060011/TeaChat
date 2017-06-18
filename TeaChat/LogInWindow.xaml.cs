@@ -269,7 +269,7 @@ namespace TeaChat
                     //Console.WriteLine("Get conf call on packet");
                     break;
                 case Packet.Commands.AudioData:
-                    byte[] data = new byte[Packet.PACKET_MAX_SIZE];
+                    byte[] data = new byte[4096];
                     int data_size = packet.GetPacketBody(data);
                     Dispatcher.BeginInvoke(
                         new Action(
