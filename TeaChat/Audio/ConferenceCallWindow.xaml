@@ -5,13 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeaChat.Audio"
         mc:Ignorable="d"
-        Title="Tea Chat" Height="320" Width="250" Closed="Window_Closed" Background="White">
+        Title="Tea Chat" Height="340" Width="280" Closed="Window_Closed" Background="White">
     <Grid>
-        <Image x:Name="stateImage" Height="110" Margin="51,120,51,23" Width="110"/>
-        <TextBox x:Name="stateTextBox" HorizontalAlignment="Stretch" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Width="128" Margin="0,50,0,0" FontSize="18" FontFamily="Yu Gothic UI Semibold" FontWeight="Bold" TextAlignment="Center"/>
-        <Button x:Name="stateButton" Margin="51,120,51,23" Width="110" Height="110" ClickMode="Press" Click="stateButton_Click" BorderBrush="Transparent">
+        <Image x:Name="stateImage" Height="110" Margin="51,120,51,23" Width="110" Visibility="Collapsed"/>
+        <TextBox x:Name="stateTextBox" HorizontalAlignment="Stretch" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Width="128" Margin="0,50,0,0" FontSize="18" FontFamily="Yu Gothic UI Semibold" FontWeight="Bold" TextAlignment="Center" BorderBrush="Transparent"/>
+        <Button x:Name="stateButton" Margin="51,120,51,23" Width="110" Height="110" ClickMode="Press" Click="stateButton_Click" BorderBrush="Transparent" Visibility="Collapsed">
             <Button.Content>
                 <Image Source="Images/to_end.png"/>
+            </Button.Content>
+            <Button.Background>
+                <ImageBrush ImageSource="Images/to_end.png" Stretch="Uniform"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="joinButton" Width="60" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" Click="joinButton_Click" BorderBrush="Transparent" Margin="50,0,0,94">
+            <Button.Content>
+                <Image Source="Images/join.png" />
+            </Button.Content>
+            <Button.Background>
+                <ImageBrush ImageSource="Images/join.png"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="rejectButton" Width="60" Height="60" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="rejectButton_Click" BorderBrush="Transparent" Margin="0,0,50,94">
+            <Button.Content>
+                <Image Source="Images/to_end.png" />
             </Button.Content>
             <Button.Background>
                 <ImageBrush ImageSource="Images/to_end.png"/>

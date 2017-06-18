@@ -94,6 +94,12 @@ namespace TeaChat.Audio
         {
             this.audio_packet_handler = new AudioPacketHandler(home_window, chat_room);
         }
+
+        public void SendPartConferenceCallPacket()
+        {
+            if (this.audio_packet_handler != null)
+                this.audio_packet_handler.SendPartConferenceCallPacket();
+        }
         
         #region audio data available event
         void AudioDataAvailable(object sender, WaveInEventArgs e)

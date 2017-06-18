@@ -13,9 +13,11 @@ namespace TeaChat.Audio
     {
         private static readonly int CC_STATE_ON_CALL = 1;
         private static readonly int CC_STATE_ON_CHAT = 2;
-        private static readonly int CC_STATE_TO_END = 3;
+        private static readonly int CC_STATE_CONFIRM = 3;
+        private static readonly int CC_STATE_TO_END = 4;
 
         private static readonly String CC_STATE_TEXT_ON_CALL = "Now Calling";
+        private static readonly String CC_STATE_TEXT_CONFIRM = "New Call";
         private static readonly String CC_STATE_TEXT_ON_CHAT = "Chat On";
 
         private int conf_call_state = 0;
@@ -65,11 +67,38 @@ namespace TeaChat.Audio
             this.stateImage.Visibility = Visibility.Visible;
             this.stateImage.Source = this.on_call_image;
 
-            // display state botton
+            // collapse state botton
             this.stateButton.Visibility = Visibility.Collapsed;
+
+            // collapse join button
+            this.joinButton.Visibility = Visibility.Collapsed;
+
+            // collapse reject button
+            this.rejectButton.Visibility = Visibility.Collapsed;
 
             // set state text to on-call text
             this.stateTextBox.Text = CC_STATE_TEXT_ON_CALL;
+        }
+
+        public void SetConferenceCallStateConfirmation()
+        {
+            // set state to on call
+            this.conf_call_state = CC_STATE_CONFIRM;
+
+            // set on-call 
+            this.stateImage.Visibility = Visibility.Collapsed;
+
+            // collapse state botton
+            this.stateButton.Visibility = Visibility.Collapsed;
+
+            // collapse join button
+            this.joinButton.Visibility = Visibility.Visible;
+
+            // collapse reject button
+            this.rejectButton.Visibility = Visibility.Visible;
+
+            // set state text to on-call text
+            this.stateTextBox.Text = CC_STATE_TEXT_CONFIRM;
         }
 
         /// <summary>
@@ -89,6 +118,12 @@ namespace TeaChat.Audio
 
             // display state botton
             this.stateButton.Visibility = Visibility.Visible;
+
+            // collapse join button
+            this.joinButton.Visibility = Visibility.Collapsed;
+
+            // collapse reject button
+            this.rejectButton.Visibility = Visibility.Collapsed;
 
             // set state text to on-chat text
             this.stateTextBox.Text = CC_STATE_TEXT_ON_CHAT;
@@ -140,15 +175,23 @@ namespace TeaChat.Audio
 
         private void stateButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.conf_call_state == CC_STATE_ON_CHAT)
-            {
-                this.Close();
-            }
+            this.Close();
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             this.SetConferenceCallStateToEnd();
+        }
+
+        private void joinButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.audio_handler.SendPartConferenceCallPacket();
+            this.SetConferenceCallStateOnCall();
+        }
+
+        private void rejectButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

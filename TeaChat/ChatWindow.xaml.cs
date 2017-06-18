@@ -506,6 +506,14 @@ namespace TeaChat
             }
         }
 
+        public void ConferenceCallConfirmation()
+        {
+            if (this.conf_call_window == null) return;
+            if (!this.conf_call_window.IsLoaded) return;
+
+            this.conf_call_window.SetConferenceCallStateConfirmation();
+        }
+
         public void ConferenceCallOn()
         {
             if (this.conf_call_window == null) return;

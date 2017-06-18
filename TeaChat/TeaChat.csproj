@@ -134,7 +134,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Audio\Images\join.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Audio\Images\on_call.png" />
     <Resource Include="Audio\Images\to_end.png" />

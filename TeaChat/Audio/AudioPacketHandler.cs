@@ -20,7 +20,8 @@ namespace TeaChat.Audio
 
         public AudioPacketHandler()
         {
-
+            //this.packet_buff = new byte[Packet.PACKET_MAX_SIZE];
+            //this.request_packet = new Packet();
         }
 
         public AudioPacketHandler(LogInWindow home_window, ChatWindow chat_room)
@@ -34,12 +35,25 @@ namespace TeaChat.Audio
 
         public void SendAudioPacket(byte[] data, int data_size)
         {
-            
+            if (this.request_packet == null)
+                this.request_packet = new Packet();
+
             // create new packet
             this.packet_size = Packet.CreateAudioPacket(this.packet_buff, 0, data, data_size);
             this.request_packet.SetPacket(this.packet_buff);
 
             // socket send
+            if (this.home_window != null)
+                this.home_window.sendToServer(this.chat_room, this.request_packet);
+        }
+
+        public void SendPartConferenceCallPacket()
+        {
+            if (this.request_packet == null)
+                this.request_packet = new Packet();
+
+            this.request_packet.MakePartConfCallPacket(0);
+
             if (this.home_window != null)
                 this.home_window.sendToServer(this.chat_room, this.request_packet);
         }

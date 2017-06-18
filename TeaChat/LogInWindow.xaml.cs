@@ -243,9 +243,18 @@ namespace TeaChat
                             }
                         )
                     );
-                    Packet rp_packet = new Packet();
-                    rp_packet.MakePartConfCallPacket(chatroomIndex);
-                    this.sendToServer(this.chatWindows[chatroomIndex], rp_packet);
+                    Dispatcher.BeginInvoke(
+                        new Action(
+                            delegate ()
+                            {
+                                this.chatWindows[chatroomIndex].ConferenceCallConfirmation();
+                            }
+                        )
+                    );
+                    // no confirmation version
+                    //Packet rp_packet = new Packet();
+                    //rp_packet.MakePartConfCallPacket(chatroomIndex);
+                    //this.sendToServer(this.chatWindows[chatroomIndex], rp_packet);
                     //Console.WriteLine("Get open conf call packet");
                     break;
                 case Packet.Commands.ConferenceCallOn:
