@@ -12,7 +12,7 @@ namespace TeaChat.Uitlity
 {
     public class ChatSetting
     {
-        public static String serverIp =  "127.0.0.1";//"192.168.0.108";
+        public static String serverIp = "140.114.86.56";//"127.0.0.1";//"192.168.0.108";
         public static int port = 9877;
     }
 
@@ -27,6 +27,7 @@ namespace TeaChat.Uitlity
         public StrHandler inHandler;
         public EndPoint remoteEndPoint;
         public bool isDead = false;
+        public static readonly int PACKET_MAX_SIZE = 2048;
 
         public ChatSocket(Socket s)
         {
@@ -39,8 +40,20 @@ namespace TeaChat.Uitlity
 
         public byte[] receive()
         {
-            byte[] msg = new byte[8192];
-            socket.Receive(msg);
+            byte[] msg = new byte[PACKET_MAX_SIZE];
+            int bytesRead = socket.Receive(msg);
+            if (bytesRead != PACKET_MAX_SIZE)
+                Console.WriteLine(bytesRead);
+            while(bytesRead < PACKET_MAX_SIZE)
+            {
+                byte[] tmp = new byte[PACKET_MAX_SIZE];
+                int bytesReadtmp = socket.Receive(tmp);
+                if (bytesRead + bytesReadtmp > PACKET_MAX_SIZE)
+                    return tmp;
+                else
+                    Array.Copy(tmp, 0, msg, bytesRead, bytesReadtmp);
+                bytesRead += bytesReadtmp;
+            }
             return msg;
         }
 
@@ -87,7 +100,8 @@ namespace TeaChat.Uitlity
                 while (true)
                 {
                     byte[] line = receive();
-                    inHandler(line);
+                    if (line != null)
+                        inHandler(line);
                 }
             }
             catch (Exception ex)

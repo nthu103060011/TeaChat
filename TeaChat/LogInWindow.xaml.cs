@@ -132,7 +132,8 @@ namespace TeaChat
 
             if (selectedUsers.Count <= 0)
                 MessageBox.Show("請選擇聊天對象");
-            startChat(selectedUsers);
+            else
+                startChat(selectedUsers);
         }
         private void startChat(List<string> chatFriends)
         {
@@ -217,6 +218,7 @@ namespace TeaChat
                     string imageFilename = packet.getFilename();
                     byte[] imageFiledata = packet.getFileData();
                     int imageSerialNumber = packet.getFileSerialNumber();
+                    Console.WriteLine(imageSerialNumber);
                     Dispatcher.BeginInvoke(new Action(delegate ()
                     {
                         chatWindows[chatroomIndex].receiveBackgroundImage(imageFilename, imageSerialNumber, imageFiledata);
@@ -226,6 +228,7 @@ namespace TeaChat
                     string filename = packet.getFilename();
                     byte[] filedata = packet.getFileData();
                     int serialNumber = packet.getFileSerialNumber();
+                    Console.WriteLine(serialNumber);
                     Dispatcher.BeginInvoke(new Action(delegate ()
                     {
                         chatWindows[chatroomIndex].receiveFile(filename, serialNumber, filedata);

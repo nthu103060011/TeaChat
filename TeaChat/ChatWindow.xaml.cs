@@ -29,8 +29,10 @@ namespace TeaChat
     /// </summary>
     public partial class ChatWindow : Window
     {
-        Window1 echoWindow = new Window1();
+        //Window1 echoWindow = new Window1();
         LogInWindow homeWindow;
+
+        public static readonly int FILE_DATA_PACKET_SIZE = 2048 - 74;
 
         TextBox textBoxInCanvas = new TextBox();
         bool creatingTextBox = false;
@@ -38,6 +40,7 @@ namespace TeaChat
         List<FileStream> writingStreamList = new List<FileStream>();
         List<string> writingFilenameList = new List<string>();
         List<bool> acceptFile = new List<bool>();
+        Image backgroundImage;
         
         private List<string> chatFriends;
 
@@ -65,7 +68,7 @@ namespace TeaChat
         }
         private void Window_Closed(object sender, EventArgs e)
         {
-            if (echoWindow != null) echoWindow.Close();
+            //if (echoWindow != null) echoWindow.Close();
 
             // 告訴 server 離開聊天
             Packet packet = new Packet();
@@ -82,22 +85,22 @@ namespace TeaChat
             while (pointsCount - sentPointsCount > 0)
             {
                 StylusPointCollection stylusPointsOnePacket = new StylusPointCollection();
-                for (int i = sentPointsCount; i < sentPointsCount + 80 && i < pointsCount; i++)
+                for (int i = sentPointsCount; i < sentPointsCount + 15 && i < pointsCount; i++)
                 {
                     stylusPointsOnePacket.Add(e.Stroke.StylusPoints[i]);
                 }
                 string drawingAttributesText = JsonConvert.SerializeObject(e.Stroke.DrawingAttributes);
                 string stylusPointsText = JsonConvert.SerializeObject(stylusPointsOnePacket);
-                File.WriteAllText(sentPointsCount + ".txt", stylusPointsText);
+                //File.WriteAllText(sentPointsCount + ".txt", stylusPointsText);
 
                 // 傳送 drawingAttributesText, stylusPointsText 兩段 string 給 server
                 Packet packet = new Packet();
                 packet.makePacketAddStroke(0, drawingAttributesText, stylusPointsText);
                 homeWindow.sendToServer(this, packet);
-                echoWindow.receiveStroke(drawingAttributesText, stylusPointsText);
+                //echoWindow.receiveStroke(drawingAttributesText, stylusPointsText);
                 //
 
-                sentPointsCount += 80;
+                sentPointsCount += 15;
             }
         }
 
@@ -114,7 +117,7 @@ namespace TeaChat
             Packet packet = new Packet();
             packet.makePacketEraseAll(0);
             homeWindow.sendToServer(this, packet);
-            echoWindow.receiveErase();
+            //echoWindow.receiveErase();
             //
         }
         #endregion
@@ -235,7 +238,7 @@ namespace TeaChat
                 Packet packet = new Packet();
                 packet.makePacketAddTextBox(0, text, X.ToString(), Y.ToString());
                 homeWindow.sendToServer(this, packet);
-                echoWindow.receiveTextBox(text, X, Y);
+                //echoWindow.receiveTextBox(text, X, Y);
                 //
             }
         }
@@ -246,13 +249,13 @@ namespace TeaChat
         {
             string text = textBox.Text;
             textBox.Text = "";
-            textBlock.Text += "我： " + text + "\n";
+            textBlock.Text += "我: " + text + "\n";
 
             // 傳送文字給 server
             Packet packet = new Packet();
             packet.makePacketTextMessage(0, homeWindow.myName, text);
             homeWindow.sendToServer(this, packet);
-            echoWindow.receiveTextMessage(text);
+            //echoWindow.receiveTextMessage(text);
             //
         }
 
@@ -262,13 +265,13 @@ namespace TeaChat
             {
                 string text = textBox.Text;
                 textBox.Text = "";
-                textBlock.Text += "我： " + text + "\n";
+                textBlock.Text += "我: " + text + "\n";
 
                 // 傳送文字給 server
                 Packet packet = new Packet();
                 packet.makePacketTextMessage(0, homeWindow.myName, text);
                 homeWindow.sendToServer(this, packet);
-                echoWindow.receiveTextMessage(text);
+                //echoWindow.receiveTextMessage(text);
                 //
             }
         }
@@ -290,7 +293,9 @@ namespace TeaChat
                     image.MaxWidth = inkCanvas.ActualWidth;
                     image.MaxHeight = inkCanvas.ActualHeight;
                 }
+                inkCanvas.Children.Remove(backgroundImage);
                 inkCanvas.Children.Add(image);
+                backgroundImage = image;
 
                 uploadFile(true, openFileDialog.FileName);
             }
@@ -311,11 +316,11 @@ namespace TeaChat
             string filename = split.Last();
 
             FileStream stream = File.OpenRead(filePath);
-            byte[] data = new byte[8118];
+            byte[] data = new byte[FILE_DATA_PACKET_SIZE];
             for (int i = 0; ; i++)
             {
                 data.Initialize();
-                int bytesRead = stream.Read(data, 0, 8118);
+                int bytesRead = stream.Read(data, 0, FILE_DATA_PACKET_SIZE);
                 if (bytesRead <= 0) break;
                 Packet packet = new Packet();
                 if (isBackgroundImage)
@@ -381,6 +386,10 @@ namespace TeaChat
             if (serialNumber == 0)
             {
                 Directory.CreateDirectory("Background Images");
+                if (File.Exists("Background Images\\" + filename))
+                {
+                    File.Delete("Background Images\\" + filename);
+                }
                 FileStream writeStream = File.OpenWrite("Background Images\\" + filename);
                 writingStreamList.Add(writeStream);
                 writingFilenameList.Add(filename);
@@ -406,7 +415,9 @@ namespace TeaChat
                     image.MaxWidth = inkCanvas.ActualWidth;
                     image.MaxHeight = inkCanvas.ActualHeight;
                 }
+                inkCanvas.Children.Remove(backgroundImage);
                 inkCanvas.Children.Add(image);
+                backgroundImage = image;
             }
             else
             {
@@ -423,7 +434,6 @@ namespace TeaChat
             {
                 Directory.CreateDirectory("Download Files");
                 FileStream writeStream = File.OpenWrite("Download Files\\" + filename);
-                acceptFile.Add(true);
                 writingStreamList.Add(writeStream);
                 writingFilenameList.Add(filename);
                 writeStream.Write(data, 0, data.Length);
@@ -434,12 +444,10 @@ namespace TeaChat
                 {
                     if (writingFilenameList[i] == filename)
                     {
-                        if (acceptFile[i])
-                        {
-                            writingStreamList[i].Close();
-                            writingStreamList.RemoveAt(i);
-                            writingFilenameList.RemoveAt(i);
-                        }
+                        writingStreamList[i].Close();
+                        writingStreamList.RemoveAt(i);
+                        writingFilenameList.RemoveAt(i);
+                        textBlock.Text += "*** 已接收檔案: " + filename + "\n";
                         break;
                     }
                 }
@@ -450,10 +458,7 @@ namespace TeaChat
                 {
                     if (writingFilenameList[i] == filename)
                     {
-                        if (acceptFile[i])
-                        {
-                            writingStreamList[i].Write(data, 0, data.Length);
-                        }
+                        writingStreamList[i].Write(data, 0, data.Length);
                         break;
                     }
                 }
