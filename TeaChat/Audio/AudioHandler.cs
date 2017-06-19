@@ -30,7 +30,7 @@ namespace TeaChat.Audio
                 8000, 
                 1
             );
-            this.audio_recoder.BufferMilliseconds = 150;
+            this.audio_recoder.BufferMilliseconds = 100;
 
             // initialize output audio data provider for audio data storage
             this.audio_out_provider = new BufferedWaveProvider(this.audio_recoder.WaveFormat);
