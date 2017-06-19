@@ -89,6 +89,14 @@ namespace TeaChat
         }
 
         #region getPacketData
+        public string GetUserRegisterData()
+        {
+            byte[] data = new byte[PACKET_MAX_BODY_SIZE];
+            int data_size = this.GetPacketBody(data);
+
+            return Encoding.UTF8.GetString(data);
+        }
+
         public string getReportNameData()
         {
             int dataSize = getDataSize();
