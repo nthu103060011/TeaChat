@@ -214,7 +214,7 @@ namespace TeaChat
         {
             ArrayUtility.ZeroByteArray(this.packet);
 
-            packet[0] = (byte)Commands.UserRegisterDeny;
+            packet[0] = (byte)Commands.UserRegisterAccept;
             packet[1] = byte.MaxValue;
         }
 
@@ -222,7 +222,7 @@ namespace TeaChat
         {
             ArrayUtility.ZeroByteArray(this.packet);
 
-            packet[0] = (byte)Commands.UserRegisterAccept;
+            packet[0] = (byte)Commands.UserRegisterDeny;
             packet[1] = byte.MaxValue;
         }
 

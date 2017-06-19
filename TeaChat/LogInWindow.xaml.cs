@@ -162,6 +162,12 @@ namespace TeaChat
 
             switch (command)
             {
+                case Packet.Commands.UserRegisterAccept:
+                    MessageBox.Show("Register Success");
+                    break;
+                case Packet.Commands.UserRegisterDeny:
+                    MessageBox.Show("Register Failure");
+                    break;
                 case Packet.Commands.UpdateUserList:
                     userList = new List<string>(packet.getUpdateUserListData());
                     Dispatcher.BeginInvoke(new Action(delegate ()
