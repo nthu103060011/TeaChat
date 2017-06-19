@@ -60,7 +60,7 @@ namespace TeaChat.Audio
             // invalid out-of-index data size handling
             if (data_size > data.Length) data_size = data.Length;
 
-            this.audio_out_provider.ClearBuffer(); // refresh
+            //this.audio_out_provider.ClearBuffer(); // refresh
             this.audio_out_provider.AddSamples(data, 0, data_size); // set new samples
             this.audio_player.Play();
             //System.Console.WriteLine("Play voice");
