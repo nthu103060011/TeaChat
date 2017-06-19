@@ -30,6 +30,8 @@ namespace TeaChat
 
         //StrHandler msgHandler;
 
+        private Packet req_packet = new Packet();
+
         List<ChatWindow> chatWindows = new List<ChatWindow>();
 
         public List<string> userList;
@@ -62,7 +64,8 @@ namespace TeaChat
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
-
+            this.req_packet.MakePacketRequestUserRegister(this.textBoxUsername.Text);
+            this.sendToServer(null, this.req_packet);
         }
 
         #region 登入 登出 建立聊天
