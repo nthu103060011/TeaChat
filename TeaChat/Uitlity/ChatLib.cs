@@ -12,7 +12,7 @@ namespace TeaChat.Uitlity
 {
     public class ChatSetting
     {
-        public static String serverIp = "127.0.0.1";//"127.0.0.1";//"192.168.0.108";
+        public static String serverIp = "140.114.86.60";//"127.0.0.1";//"192.168.0.108";
         public static int port = 9877;
     }
 
@@ -64,7 +64,13 @@ namespace TeaChat.Uitlity
 
         public ChatSocket send(byte[] line)
         {
-            socket.Send(line);
+            try
+            {
+                socket.Send(line);
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
             return this;
         }
 
