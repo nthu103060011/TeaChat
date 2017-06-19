@@ -60,6 +60,7 @@ namespace TeaChat.Audio
         /// </summary>
         public void SetConferenceCallStateOnCall()
         {
+            if (this.conf_call_state == CC_STATE_ON_CHAT) return;
             // set state to on call
             this.conf_call_state = CC_STATE_ON_CALL;
 
@@ -82,6 +83,8 @@ namespace TeaChat.Audio
 
         public void SetConferenceCallStateConfirmation()
         {
+            if (this.conf_call_state >= CC_STATE_CONFIRM) return;
+
             // set state to on call
             this.conf_call_state = CC_STATE_CONFIRM;
 
