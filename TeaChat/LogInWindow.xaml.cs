@@ -167,6 +167,13 @@ namespace TeaChat
                         listBoxOnlineUsers.ItemsSource = userList;
                     }));
                     break;
+                case Packet.Commands.AccountAuthorized:
+                    // TODO
+                    break;
+                case Packet.Commands.AccountInvalid:
+                    // TODO
+                    MessageBox.Show("Invalid Account");
+                    break;
                 case Packet.Commands.ChatRequest:
                     List<string> chatFriends = packet.getChatRequestData();
                     ChatWindow newChatWindow;
