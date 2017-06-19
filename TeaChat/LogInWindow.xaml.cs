@@ -30,6 +30,8 @@ namespace TeaChat
 
         //StrHandler msgHandler;
 
+        private Packet req_packet;
+
         List<ChatWindow> chatWindows = new List<ChatWindow>();
 
         public List<string> userList;
@@ -43,6 +45,11 @@ namespace TeaChat
             InitializeComponent();
             gridHome.Visibility = Visibility.Collapsed;
             stackPanelLogIn.Visibility = Visibility.Visible;
+
+            this.req_packet = new Packet();
+
+            this.client = ChatSocket.connect(ChatSetting.serverIp);
+            client.newListener(receiveFromServer);
         }
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -62,7 +69,17 @@ namespace TeaChat
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
+            if (this.client == null)
+            {
+                this.client = ChatSocket.connect(ChatSetting.serverIp);
+                this.client.newListener(receiveFromServer);
+            }
 
+            if (this.req_packet == null)
+                this.req_packet = new Packet();
+
+            this.req_packet.MakePacketRequestUserRegister(this.textBoxUsername.Text, this.textBoxPassword.Text);
+            this.sendToServer(null, this.req_packet);
         }
 
         #region 登入 登出 建立聊天
@@ -77,9 +94,15 @@ namespace TeaChat
         private bool logIn(string username)
         {
             myName = username;
-            
+
+            if (this.client == null)
+            {
+                this.client = ChatSocket.connect(ChatSetting.serverIp);
+                this.client.newListener(receiveFromServer);
+            }
+
             bool connectSuccess;
-            client = ChatSocket.connect(ChatSetting.serverIp);
+            //client = ChatSocket.connect(ChatSetting.serverIp);
             if (client == null) connectSuccess = false;
             else connectSuccess = true;
 
@@ -87,10 +110,8 @@ namespace TeaChat
             {
                 LoginIn = true;
                 Packet packet = new Packet();
-                packet.makePacketReportName(username);
+                packet.makePacketReportName(username, this.textBoxPassword.Text);
                 sendToServer(null, packet);
-
-                client.newListener(receiveFromServer);
             }
             return connectSuccess;
         }
@@ -103,6 +124,7 @@ namespace TeaChat
             // 關閉連線
             LoginIn = false;
             client.close();
+            client = null;
             //
 
             foreach (ChatWindow chatWindow in chatWindows)
@@ -152,6 +174,12 @@ namespace TeaChat
 
             switch (command)
             {
+                case Packet.Commands.UserRegisterAccept:
+                    MessageBox.Show("Register Success");
+                    break;
+                case Packet.Commands.UserRegisterDeny:
+                    MessageBox.Show("Register Failure");
+                    break;
                 case Packet.Commands.UpdateUserList:
                     userList = new List<string>(packet.getUpdateUserListData());
                     Dispatcher.BeginInvoke(new Action(delegate ()
@@ -168,8 +196,7 @@ namespace TeaChat
                     }));
                     break;
                 case Packet.Commands.AccountInvalid:
-                    client.close();
-                    MessageBox.Show("帳號錯誤");
+                    MessageBox.Show("帳號或密碼錯誤");
                     break;
                 case Packet.Commands.ChatRequest:
                     List<string> chatFriends = packet.getChatRequestData();
@@ -304,7 +331,14 @@ namespace TeaChat
             Console.Write("Send command: "); Console.WriteLine(packet.getCommand());
             Console.Write("Send Chat room num: "); Console.WriteLine(chatroomIndex);
 
-            client.send(dataSand);
+            try
+            {
+                client.send(dataSand);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
     }
 }
