@@ -89,20 +89,20 @@ namespace TeaChat
         }
 
         #region getPacketData
-        public string GetUserRegisterData()
+        public string[] GetUserRegisterData()
         {
-            byte[] data = new byte[this.getDataSize()];
-            int data_size = this.GetPacketBody(data);
-
-            return Encoding.UTF8.GetString(data);
+            return this.getTextMessageData();
         }
 
-        public string getReportNameData()
+        public string[] getReportNameData()
         {
+            /*
             int dataSize = getDataSize();
             byte[] data = new byte[dataSize];
             Array.Copy(packet, 6, data, 0, dataSize);
             return Encoding.UTF8.GetString(data);
+            */
+            return this.getTextMessageData();
         }
 
         public List<string> getUpdateUserListData()
@@ -187,27 +187,14 @@ namespace TeaChat
 
         #region makePacket
 
-        public void MakePacketRequestUserRegister(String account)
+        public void MakePacketRequestUserRegister(String account, string pwd)
         {
             ArrayUtility.ZeroByteArray(this.packet);
 
-            int packet_size = 0;
+            this.makePacketTextMessage(0, account, pwd);
 
             packet[0] = (byte)Commands.RequestUserRegister;
             packet[1] = byte.MaxValue;
-            packet_size += 2;
-
-            byte[] data = Encoding.UTF8.GetBytes(account);
-            byte[] data_size_bytes = BitConverter.GetBytes(data.Length);
-
-            packet_size += ArrayUtility.CopyByteArray(
-                this.packet, packet_size, 
-                data_size_bytes, 0, data_size_bytes.Length
-            );
-            packet_size += ArrayUtility.CopyByteArray(
-                this.packet, packet_size,
-                data, 0, data.Length
-            );
         }
 
         public void MakePacketUserRegisterAccept()
@@ -226,15 +213,18 @@ namespace TeaChat
             packet[1] = byte.MaxValue;
         }
 
-        public void makePacketReportName(string username)
+        public void makePacketReportName(string username, string pwd)
         {
             packet.Initialize();
+            this.makePacketTextMessage(0, username, pwd);
             packet[0] = (byte)Commands.ReportName;
             packet[1] = byte.MaxValue;
+            /*
             byte[] data = Encoding.UTF8.GetBytes(username);
             byte[] dataSize = BitConverter.GetBytes(data.Length);
             Array.Copy(dataSize, 0, packet, 2, 4);
             Array.Copy(data, 0, packet, 6, data.Length);
+            */
         }
 
         public void MakePakcetAccountAuthorized()

@@ -49,6 +49,7 @@ namespace TeaChat
             this.req_packet = new Packet();
 
             this.client = ChatSocket.connect(ChatSetting.serverIp);
+            client.newListener(receiveFromServer);
         }
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -68,10 +69,16 @@ namespace TeaChat
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
+            if (this.client == null)
+            {
+                this.client = ChatSocket.connect(ChatSetting.serverIp);
+                this.client.newListener(receiveFromServer);
+            }
+
             if (this.req_packet == null)
                 this.req_packet = new Packet();
 
-            this.req_packet.MakePacketRequestUserRegister(this.textBoxUsername.Text);
+            this.req_packet.MakePacketRequestUserRegister(this.textBoxUsername.Text, this.textBoxPassword.Text);
             this.sendToServer(null, this.req_packet);
         }
 
@@ -87,7 +94,13 @@ namespace TeaChat
         private bool logIn(string username)
         {
             myName = username;
-            
+
+            if (this.client == null)
+            {
+                this.client = ChatSocket.connect(ChatSetting.serverIp);
+                this.client.newListener(receiveFromServer);
+            }
+
             bool connectSuccess;
             //client = ChatSocket.connect(ChatSetting.serverIp);
             if (client == null) connectSuccess = false;
@@ -97,10 +110,8 @@ namespace TeaChat
             {
                 LoginIn = true;
                 Packet packet = new Packet();
-                packet.makePacketReportName(username);
+                packet.makePacketReportName(username, this.textBoxPassword.Text);
                 sendToServer(null, packet);
-
-                client.newListener(receiveFromServer);
             }
             return connectSuccess;
         }
@@ -113,6 +124,7 @@ namespace TeaChat
             // 關閉連線
             LoginIn = false;
             client.close();
+            client = null;
             //
 
             foreach (ChatWindow chatWindow in chatWindows)
