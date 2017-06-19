@@ -50,7 +50,14 @@ namespace TeaChat
 
             this.client = ChatSocket.connect(ChatSetting.serverIp);
 
-            client.newListener(receiveFromServer);
+            try
+            {
+                client.newListener(receiveFromServer);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -92,7 +99,14 @@ namespace TeaChat
             if (this.client == null)
             {
                 this.client = ChatSocket.connect(ChatSetting.serverIp);
-                this.client.newListener(receiveFromServer);
+                try
+                {
+                    client.newListener(receiveFromServer);
+                }
+                catch (Exception err)
+                {
+                    Console.WriteLine(err.ToString());
+                }
             }
 
             if (this.req_packet == null)
@@ -139,7 +153,14 @@ namespace TeaChat
             if (this.client == null)
             {
                 this.client = ChatSocket.connect(ChatSetting.serverIp);
-                this.client.newListener(receiveFromServer);
+                try
+                {
+                    client.newListener(receiveFromServer);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
             }
 
             bool connectSuccess;
