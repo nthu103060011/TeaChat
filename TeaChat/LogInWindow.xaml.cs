@@ -62,8 +62,8 @@ namespace TeaChat
                 packet.makePacketLogOut();
                 sendToServer(null, packet);
                 LoginIn = false;
-                client.close();
             }
+            client.close();
 
             foreach (ChatWindow chatWindow in chatWindows)
                 chatWindow.Close();
@@ -209,6 +209,10 @@ namespace TeaChat
             {
                 case Packet.Commands.UserRegisterAccept:
                     MessageBox.Show("註冊成功");
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        buttonLogIn.Focus();
+                    }));
                     break;
                 case Packet.Commands.UserRegisterDeny:
                     MessageBox.Show("註冊失敗");
