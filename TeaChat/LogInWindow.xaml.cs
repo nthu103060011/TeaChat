@@ -60,6 +60,11 @@ namespace TeaChat
                 chatWindow.Close();
         }
 
+        private void buttonRegister_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         #region 登入 登出 建立聊天
         private void buttonLogIn_Click(object sender, RoutedEventArgs e)
         {

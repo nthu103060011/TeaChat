@@ -40,7 +40,7 @@ namespace TeaChat
         List<FileStream> writingStreamList = new List<FileStream>();
         List<string> writingFilenameList = new List<string>();
         List<bool> acceptFile = new List<bool>();
-        Image backgroundImage;
+        BitmapImage imageSource = new BitmapImage();
         
         private List<string> chatFriends;
 
@@ -284,18 +284,16 @@ namespace TeaChat
             openFileDialog.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png";
             if (openFileDialog.ShowDialog() == true)
             {
-                BitmapImage imageSource = new BitmapImage(new Uri(openFileDialog.FileName));
-                Image image = new Image();
-                image.Source = imageSource;
+                imageSource.BeginInit();
+                imageSource.UriSource = new Uri(openFileDialog.FileName);
+                imageSource.EndInit();
                 if (imageSource.Width > inkCanvas.ActualWidth || imageSource.Height > inkCanvas.ActualHeight)
                 {
-                    image.Stretch = Stretch.Uniform;
-                    image.MaxWidth = inkCanvas.ActualWidth;
-                    image.MaxHeight = inkCanvas.ActualHeight;
+                    backgroundImage.Stretch = Stretch.Uniform;
+                    backgroundImage.MaxWidth = inkCanvas.ActualWidth;
+                    backgroundImage.MaxHeight = inkCanvas.ActualHeight;
                 }
-                inkCanvas.Children.Remove(backgroundImage);
-                inkCanvas.Children.Add(image);
-                backgroundImage = image;
+                backgroundImage.Source = imageSource;
 
                 uploadFile(true, openFileDialog.FileName);
             }
@@ -342,7 +340,7 @@ namespace TeaChat
         }
         #endregion
 
-         #region 從server收到的命令 DONE
+        #region 從server收到的命令 DONE
         public void receiveStroke(string[] strokeString)
         {
             string drawingAttributesText = strokeString[0];
@@ -386,10 +384,10 @@ namespace TeaChat
             if (serialNumber == 0)
             {
                 Directory.CreateDirectory("Background Images");
-                if (File.Exists("Background Images\\" + filename))
-                {
-                    File.Delete("Background Images\\" + filename);
-                }
+                //if (File.Exists("Background Images\\" + filename))
+                //{
+                //    File.Delete("Background Images\\" + filename);
+                //}
                 FileStream writeStream = File.OpenWrite("Background Images\\" + filename);
                 writingStreamList.Add(writeStream);
                 writingFilenameList.Add(filename);
@@ -405,19 +403,17 @@ namespace TeaChat
                         writingFilenameList.RemoveAt(i);
                         break;
                     }
-
-                BitmapImage imageSource = new BitmapImage(new Uri("Background Images\\" + filename, UriKind.Relative));
-                Image image = new Image();
-                image.Source = imageSource;
+                
+                imageSource.BeginInit();
+                imageSource.UriSource = new Uri("Background Images\\" + filename, UriKind.Relative);
+                imageSource.EndInit();
                 if (imageSource.Width > inkCanvas.ActualWidth || imageSource.Height > inkCanvas.ActualHeight)
                 {
-                    image.Stretch = Stretch.Uniform;
-                    image.MaxWidth = inkCanvas.ActualWidth;
-                    image.MaxHeight = inkCanvas.ActualHeight;
+                    backgroundImage.Stretch = Stretch.Uniform;
+                    backgroundImage.MaxWidth = inkCanvas.ActualWidth;
+                    backgroundImage.MaxHeight = inkCanvas.ActualHeight;
                 }
-                inkCanvas.Children.Remove(backgroundImage);
-                inkCanvas.Children.Add(image);
-                backgroundImage = image;
+                backgroundImage.Source = imageSource;
             }
             else
             {
