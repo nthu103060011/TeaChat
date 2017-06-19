@@ -386,10 +386,12 @@ namespace TeaChat
             if (serialNumber == 0)
             {
                 Directory.CreateDirectory("Background Images");
+                /*
                 if (File.Exists("Background Images\\" + filename))
                 {
                     File.Delete("Background Images\\" + filename);
                 }
+                */
                 FileStream writeStream = File.OpenWrite("Background Images\\" + filename);
                 writingStreamList.Add(writeStream);
                 writingFilenameList.Add(filename);
