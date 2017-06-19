@@ -196,8 +196,7 @@ namespace TeaChat
                     }));
                     break;
                 case Packet.Commands.AccountInvalid:
-                    //client.close();
-                    MessageBox.Show("帳號錯誤");
+                    MessageBox.Show("帳號或密碼錯誤");
                     break;
                 case Packet.Commands.ChatRequest:
                     List<string> chatFriends = packet.getChatRequestData();
