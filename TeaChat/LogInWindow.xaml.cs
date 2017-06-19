@@ -49,8 +49,10 @@ namespace TeaChat
             this.req_packet = new Packet();
 
             this.client = ChatSocket.connect(ChatSetting.serverIp);
+
             client.newListener(receiveFromServer);
         }
+
         private void Window_Closed(object sender, EventArgs e)
         {
             // 如果還沒登出，要登出
@@ -297,30 +299,34 @@ namespace TeaChat
                     }));
                     break;
                 case Packet.Commands.OpenConferenceCall: // peer
-                    Dispatcher.BeginInvoke(
-                        new Action(
-                            delegate()
-                            {
-                                this.chatWindows[chatroomIndex].SetupConferenceCallWindow();
-                            }
-                        )
-                    );
-                    Dispatcher.BeginInvoke(
-                        new Action(
-                            delegate ()
-                            {
-                                this.chatWindows[chatroomIndex].ConferenceCallConfirmation();
-                            }
-                        )
-                    );
-                    // no confirmation version
-                    //Packet rp_packet = new Packet();
-                    //rp_packet.MakePartConfCallPacket(chatroomIndex);
-                    //this.sendToServer(this.chatWindows[chatroomIndex], rp_packet);
-                    //Console.WriteLine("Get open conf call packet");
+                    try
+                    {
+                        Dispatcher.BeginInvoke(
+                            new Action(
+                                delegate ()
+                                {
+                                    this.chatWindows[chatroomIndex].SetupConferenceCallWindow();
+                                }
+                            )
+                        );
+                        Dispatcher.BeginInvoke(
+                            new Action(
+                                delegate ()
+                                {
+                                    this.chatWindows[chatroomIndex].ConferenceCallConfirmation();
+                                }
+                            )
+                        );
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
                     break;
                 case Packet.Commands.ConferenceCallOn:
-                    Dispatcher.BeginInvoke(
+                    try
+                    {
+                        Dispatcher.BeginInvoke(
                         new Action(
                             delegate ()
                             {
@@ -328,6 +334,11 @@ namespace TeaChat
                             }
                         )
                     );
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
                     //Console.WriteLine("Get conf call on packet");
                     break;
                 case Packet.Commands.AudioData:
