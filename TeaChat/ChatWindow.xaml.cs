@@ -40,7 +40,6 @@ namespace TeaChat
         List<FileStream> writingStreamList = new List<FileStream>();
         List<string> writingFilenameList = new List<string>();
         List<bool> acceptFile = new List<bool>();
-        BitmapImage imageSource = new BitmapImage();
         
         private List<string> chatFriends;
 
@@ -284,6 +283,7 @@ namespace TeaChat
             openFileDialog.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png";
             if (openFileDialog.ShowDialog() == true)
             {
+                BitmapImage imageSource = new BitmapImage();
                 imageSource.BeginInit();
                 imageSource.UriSource = new Uri(openFileDialog.FileName);
                 imageSource.EndInit();
@@ -312,6 +312,7 @@ namespace TeaChat
         {
             string[] split = filePath.Split('\\');
             string filename = split.Last();
+            filename = DateTime.Now.ToString("yyyyMMddHHmmssf") + filename;
 
             FileStream stream = File.OpenRead(filePath);
             byte[] data = new byte[FILE_DATA_PACKET_SIZE];
@@ -327,6 +328,7 @@ namespace TeaChat
                     packet.makePacketFile(0, filename, i, data, bytesRead);
                 homeWindow.sendToServer(this, packet);
             }
+            stream.Close();
             
             // EOF 封包的 Serial Number = -1
             Packet packetEOF = new Packet();
@@ -336,7 +338,6 @@ namespace TeaChat
                 packetEOF.makePacketFile(0, filename, -1, data, 0);
             homeWindow.sendToServer(this, packetEOF);
 
-            stream.Close();
         }
         #endregion
 
@@ -403,7 +404,8 @@ namespace TeaChat
                         writingFilenameList.RemoveAt(i);
                         break;
                     }
-                
+
+                BitmapImage imageSource = new BitmapImage();
                 imageSource.BeginInit();
                 imageSource.UriSource = new Uri("Background Images\\" + filename, UriKind.Relative);
                 imageSource.EndInit();

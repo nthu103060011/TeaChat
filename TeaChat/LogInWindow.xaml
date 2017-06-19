@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeaChat"
         mc:Ignorable="d"
-        Title="TeaChat - 登入" Width="300" WindowStartupLocation="CenterOwner" Closed="Window_Closed" VerticalAlignment="Top" Height="250">
+        Title="TeaChat - 登入" Width="300" WindowStartupLocation="CenterOwner" Closed="Window_Closed" VerticalAlignment="Top" Height="300">
     <DockPanel Background="#FFA5E3FF">
         <StackPanel x:Name="stackPanelLogIn" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,30,0,0" DockPanel.Dock="Top">
             <Label x:Name="label" Content="帳號" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"/>
