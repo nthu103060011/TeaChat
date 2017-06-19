@@ -22,8 +22,7 @@
                     <DockPanel HorizontalAlignment="Stretch"/>
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
-            <MenuItem Header="設定"/>
-            <MenuItem x:Name="labelFriends" Header="聊天中：" HorizontalAlignment="Right" IsEnabled="False" />
+            <MenuItem x:Name="labelFriends" Header="聊天中：" HorizontalAlignment="Left" IsEnabled="False" />
         </Menu>
         <Menu Grid.Row="1" Background="{x:Null}" BorderBrush="#FFFFCA00" BorderThickness="0,0,0,1" Padding="0,3" Margin="0,0,5,0">
             <MenuItem x:Name="menuItemEraseAll" Header="清除畫板" Click="menuItemEraseAll_Click"/>
@@ -51,14 +50,14 @@
             </InkCanvas.DefaultDrawingAttributes>-->
         </InkCanvas>
         <Button x:Name="conferenceCallButton" Content="群組通話" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Grid.Row="1" Grid.Column="1" Click="conferenceCallButton_Click"/>
-        <Grid Grid.Column="2" Margin="0" Grid.Row="2" Background="#FFA5E3FF" Grid.RowSpan="2">
+        <Grid Grid.Column="2" Margin="0" Grid.Row="2" Background="White" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="10*"/>
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text=""/>
-            <TextBox x:Name="textBox" TextWrapping="Wrap" PreviewKeyDown="textBox_PreviewKeyDown" Grid.Row="1"/>
+            <TextBox x:Name="textBox" TextWrapping="Wrap" PreviewKeyDown="textBox_PreviewKeyDown" Grid.Row="1" BorderThickness="3"/>
             <Button x:Name="buttonSendText" Content="送出" Background="#FFA5E3FF" Click="buttonSendText_Click" BorderBrush="{x:Null}" BorderThickness="0" Margin="0" ClipToBounds="True" Padding="1,5" Grid.Row="2"/>
         </Grid>
     </Grid>
