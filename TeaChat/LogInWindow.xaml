@@ -6,14 +6,14 @@
         xmlns:local="clr-namespace:TeaChat"
         mc:Ignorable="d"
         Title="TeaChat - 登入" Width="300" WindowStartupLocation="CenterOwner" Closed="Window_Closed" VerticalAlignment="Top" Height="300">
-    <DockPanel Background="#FFA5E3FF">
-        <StackPanel x:Name="stackPanelLogIn" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,30,0,0" DockPanel.Dock="Top">
+    <DockPanel Background="#FFD7CDFF">
+        <StackPanel x:Name="stackPanelLogIn" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,30,0,0" DockPanel.Dock="Top" PreviewKeyDown="stackPanelLogIn_PreviewKeyDown">
             <Label x:Name="label" Content="帳號" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"/>
             <TextBox x:Name="textBoxUsername" HorizontalAlignment="Left" Height="23" Margin="0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
             <Label x:Name="label1" Content="密碼" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"/>
-            <TextBox x:Name="textBoxPassword" HorizontalAlignment="Left" Height="23" Margin="0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-            <Button x:Name="buttonLogIn" HorizontalAlignment="Center" Content="登入" Background="#FF69D0FF" BorderBrush="{x:Null}" Margin="0,15,0,0" Padding="5,3" Click="buttonLogIn_Click" BorderThickness="0"/>
-            <Button x:Name="buttonRegister" HorizontalAlignment="Center" Content="註冊" Background="#FF69D0FF" BorderBrush="{x:Null}" Margin="0,15,0,0" Padding="5,3" Click="buttonRegister_Click" BorderThickness="0"/>
+            <PasswordBox x:Name="textBoxPassword" HorizontalAlignment="Left" Height="23" Margin="0" VerticalAlignment="Top" Width="120"/>
+            <Button x:Name="buttonLogIn" HorizontalAlignment="Center" Content="登入" Background="White" BorderBrush="{x:Null}" Margin="0,15,0,0" Padding="5,3" Click="buttonLogIn_Click" BorderThickness="0"/>
+            <Button x:Name="buttonRegister" HorizontalAlignment="Center" Content="註冊" Background="White" BorderBrush="{x:Null}" Margin="0,15,0,0" Padding="5,3" Click="buttonRegister_Click" BorderThickness="0"/>
         </StackPanel>
         <Grid x:Name="gridHome" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
@@ -28,8 +28,8 @@
             <Label Content="線上使用者" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0"/>
             <ListBox x:Name="listBoxOnlineUsers" Margin="5" Grid.Row="1" SelectionMode="Multiple"/>
             <ListBox x:Name="listBoxChatrooms" Margin="5" Grid.Row="1" Grid.Column="1"/>
-            <Button x:Name="buttonStartChat" HorizontalAlignment="Center" Content="開始聊天" Background="#FF69D0FF" BorderBrush="{x:Null}" Margin="0" Padding="5,3" BorderThickness="0" Grid.Row="2" VerticalAlignment="Center" Click="buttonStartChat_Click"/>
-            <Button x:Name="buttonLogOut" HorizontalAlignment="Right" Content="登出" Background="#FF69D0FF" BorderBrush="{x:Null}" Margin="0,0,5,0" Padding="5,3" BorderThickness="0" Grid.Row="2" VerticalAlignment="Center" Click="buttonLogOut_Click"/>
+            <Button x:Name="buttonStartChat" HorizontalAlignment="Center" Content="開始聊天" Background="White" BorderBrush="{x:Null}" Margin="0" Padding="5,3" BorderThickness="0" Grid.Row="2" VerticalAlignment="Center" Click="buttonStartChat_Click"/>
+            <Button x:Name="buttonLogOut" HorizontalAlignment="Right" Content="登出" Background="White" BorderBrush="{x:Null}" Margin="0,0,5,0" Padding="5,3" BorderThickness="0" Grid.Row="2" VerticalAlignment="Center" Click="buttonLogOut_Click"/>
         </Grid>
     </DockPanel>
 </Window>

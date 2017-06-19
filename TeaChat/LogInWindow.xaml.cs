@@ -78,11 +78,23 @@ namespace TeaChat
             if (this.req_packet == null)
                 this.req_packet = new Packet();
 
-            this.req_packet.MakePacketRequestUserRegister(this.textBoxUsername.Text, this.textBoxPassword.Text);
+            this.req_packet.MakePacketRequestUserRegister(this.textBoxUsername.Text, this.textBoxPassword.Password);
             this.sendToServer(null, this.req_packet);
         }
 
         #region 登入 登出 建立聊天
+
+        private void stackPanelLogIn_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (textBoxUsername.Text == "")
+                    MessageBox.Show("請輸入帳號");
+                else if (logIn(textBoxUsername.Text) == false)
+                    MessageBox.Show("Server沒開");
+            }
+        }
+
         private void buttonLogIn_Click(object sender, RoutedEventArgs e)
         {
             if (textBoxUsername.Text == "")
@@ -110,7 +122,7 @@ namespace TeaChat
             {
                 LoginIn = true;
                 Packet packet = new Packet();
-                packet.makePacketReportName(username, this.textBoxPassword.Text);
+                packet.makePacketReportName(username, this.textBoxPassword.Password);
                 sendToServer(null, packet);
             }
             return connectSuccess;
@@ -175,10 +187,10 @@ namespace TeaChat
             switch (command)
             {
                 case Packet.Commands.UserRegisterAccept:
-                    MessageBox.Show("Register Success");
+                    MessageBox.Show("註冊成功");
                     break;
                 case Packet.Commands.UserRegisterDeny:
-                    MessageBox.Show("Register Failure");
+                    MessageBox.Show("註冊失敗");
                     break;
                 case Packet.Commands.UpdateUserList:
                     userList = new List<string>(packet.getUpdateUserListData());

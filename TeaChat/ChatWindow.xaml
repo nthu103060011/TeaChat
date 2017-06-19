@@ -52,8 +52,8 @@
             </MenuItem>
             <MenuItem x:Name="menuItemAddText" Header="文字方塊" IsCheckable="True" Checked="menuItemAddText_Checked" Unchecked="menuItemAddText_Unchecked" />
             <MenuItem x:Name="menuItemBackgroundImage" Header="背景圖片" Click="menuItemBackgroundImage_Click" />
-            <MenuItem x:Name="menuItemUploadFile" Header="上傳檔案" Click="menuItemUploadFile_Click" />
-            </Menu>
+            <MenuItem x:Name="menuItemUploadFile" Header="上傳檔案" Click="menuItemUploadFile_Click" HorizontalAlignment="Left" />
+        </Menu>
 
         <Menu Grid.Row="1" Background="White" BorderThickness="0,0,0,3" Padding="0,3" Margin="0" BorderBrush="#FFDEDEDE" Grid.Column="1">
             <Menu.ItemsPanel>
@@ -76,7 +76,9 @@
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="" Background="#FFD7CDFF"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="" Background="#FFD7CDFF"/>
+            </ScrollViewer>
             <TextBox x:Name="textBox" TextWrapping="Wrap" PreviewKeyDown="textBox_PreviewKeyDown" Grid.Row="1" BorderThickness="3" Background="White"/>
             <Button x:Name="buttonSendText" Content="送出" Background="#FFB3B3F1" Click="buttonSendText_Click" Margin="0" Grid.Row="2" BorderBrush="{x:Null}">
             </Button>
