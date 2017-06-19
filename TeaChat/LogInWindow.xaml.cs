@@ -202,8 +202,8 @@ namespace TeaChat
             int chatroomIndex = packet.getChatroomIndex();
 
             // debug
-            Console.Write("Recv command: "); Console.WriteLine(command);
-            Console.Write("Recv Chat room num: ");Console.WriteLine(chatroomIndex);
+            //Console.Write("Recv command: "); Console.WriteLine(command);
+            //Console.Write("Recv Chat room num: ");Console.WriteLine(chatroomIndex);
 
             switch (command)
             {
@@ -286,7 +286,7 @@ namespace TeaChat
                     string imageFilename = packet.getFilename();
                     byte[] imageFiledata = packet.getFileData();
                     int imageSerialNumber = packet.getFileSerialNumber();
-                    Console.WriteLine(imageSerialNumber);
+                    if (imageSerialNumber <= 0) Console.WriteLine(imageSerialNumber);
                     Dispatcher.BeginInvoke(new Action(delegate ()
                     {
                         chatWindows[chatroomIndex].receiveBackgroundImage(imageFilename, imageSerialNumber, imageFiledata);
@@ -296,7 +296,7 @@ namespace TeaChat
                     string filename = packet.getFilename();
                     byte[] filedata = packet.getFileData();
                     int serialNumber = packet.getFileSerialNumber();
-                    Console.WriteLine(serialNumber);
+                    if (serialNumber <= 0) Console.WriteLine(serialNumber);
                     Dispatcher.BeginInvoke(new Action(delegate ()
                     {
                         chatWindows[chatroomIndex].receiveFile(filename, serialNumber, filedata);
@@ -381,8 +381,8 @@ namespace TeaChat
             byte[] dataSand = packet.getPacket();
 
             // debug
-            Console.Write("Send command: "); Console.WriteLine(packet.getCommand());
-            Console.Write("Send Chat room num: "); Console.WriteLine(chatroomIndex);
+            //Console.Write("Send command: "); Console.WriteLine(packet.getCommand());
+            //Console.Write("Send Chat room num: "); Console.WriteLine(chatroomIndex);
 
             try
             {
