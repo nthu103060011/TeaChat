@@ -16,15 +16,26 @@
             <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Menu Background="#FFFFCA00" Grid.ColumnSpan="3" Padding="0,3" FontSize="14">
+        <Menu Grid.ColumnSpan="3" Padding="0,3" FontSize="14" Foreground="White">
+            <Menu.Background>
+                <RadialGradientBrush>
+                    <GradientStop Color="#FFB3B3F1" Offset="1"/>
+                    <GradientStop Color="White"/>
+                </RadialGradientBrush>
+            </Menu.Background>
             <Menu.ItemsPanel>
                 <ItemsPanelTemplate>
                     <DockPanel HorizontalAlignment="Stretch"/>
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
-            <MenuItem x:Name="labelFriends" Header="聊天中：" HorizontalAlignment="Left" IsEnabled="False" />
+            <MenuItem x:Name="labelFriends" Header="聊天中：" HorizontalAlignment="Left" IsEnabled="False" Foreground="Black" />
         </Menu>
-        <Menu Grid.Row="1" Background="{x:Null}" BorderBrush="#FFFFCA00" BorderThickness="0,0,0,1" Padding="0,3" Margin="0,0,5,0">
+        <Menu Grid.Row="1" Background="White" BorderThickness="0,0,0,3" Padding="0,3" Margin="0" BorderBrush="#FFDEDEDE">
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <DockPanel HorizontalAlignment="Stretch"/>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
             <MenuItem x:Name="menuItemEraseAll" Header="清除畫板" Click="menuItemEraseAll_Click"/>
             <MenuItem x:Name="menuItemPenColor" Header="畫筆顏色">
                 <MenuItem Header="紅色" Click="menuItemRed_Click" IsCheckable="True"/>
@@ -42,24 +53,33 @@
             <MenuItem x:Name="menuItemAddText" Header="文字方塊" IsCheckable="True" Checked="menuItemAddText_Checked" Unchecked="menuItemAddText_Unchecked" />
             <MenuItem x:Name="menuItemBackgroundImage" Header="背景圖片" Click="menuItemBackgroundImage_Click" />
             <MenuItem x:Name="menuItemUploadFile" Header="上傳檔案" Click="menuItemUploadFile_Click" />
+            </Menu>
+
+        <Menu Grid.Row="1" Background="White" BorderThickness="0,0,0,3" Padding="0,3" Margin="0" BorderBrush="#FFDEDEDE" Grid.Column="1">
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <DockPanel HorizontalAlignment="Stretch"/>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
+            <MenuItem x:Name="conferenceCallButton" Header="語音通話" HorizontalAlignment="Center" Click="conferenceCallButton_Click" Margin="0"/>
         </Menu>
         <GridSplitter Grid.Row="1" Background="#FFB4B4B4" Width="5" Grid.RowSpan="4"/>
-        <InkCanvas x:Name="inkCanvas" Margin="0,0,5,0" Grid.Row="2" Background="#FFFFFAC7" StrokeCollected="InkCanvas_StrokeCollected" PreviewMouseDown="inkCanvas_PreviewMouseDown" Grid.RowSpan="3">
+        <InkCanvas x:Name="inkCanvas" Margin="0,0,5,0" Grid.Row="2" Background="#FFEEEAFF" StrokeCollected="InkCanvas_StrokeCollected" PreviewMouseDown="inkCanvas_PreviewMouseDown" Grid.RowSpan="3">
             <!--<InkCanvas.DefaultDrawingAttributes>
                 <DrawingAttributes Color="Black" FitToCurve="False" Height="2.0031496062992127" IgnorePressure="True" IsHighlighter="False" StylusTip="Ellipse" StylusTipTransform="Identity" Width="2.0031496062992127"/>
             </InkCanvas.DefaultDrawingAttributes>-->
             <Image x:Name="backgroundImage"></Image>
         </InkCanvas>
-        <Button x:Name="conferenceCallButton" Content="群組通話" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Grid.Row="1" Grid.Column="1" Click="conferenceCallButton_Click"/>
         <Grid Grid.Column="2" Margin="0" Grid.Row="2" Background="White" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="10*"/>
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text=""/>
-            <TextBox x:Name="textBox" TextWrapping="Wrap" PreviewKeyDown="textBox_PreviewKeyDown" Grid.Row="1" BorderThickness="3"/>
-            <Button x:Name="buttonSendText" Content="送出" Background="#FFA5E3FF" Click="buttonSendText_Click" BorderBrush="{x:Null}" BorderThickness="0" Margin="0" ClipToBounds="True" Padding="1,5" Grid.Row="2"/>
+            <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="" Background="#FFD7CDFF"/>
+            <TextBox x:Name="textBox" TextWrapping="Wrap" PreviewKeyDown="textBox_PreviewKeyDown" Grid.Row="1" BorderThickness="3" Background="White"/>
+            <Button x:Name="buttonSendText" Content="送出" Background="#FFB3B3F1" Click="buttonSendText_Click" Margin="0" Grid.Row="2" BorderBrush="{x:Null}">
+            </Button>
         </Grid>
     </Grid>
 </Window>

@@ -45,12 +45,17 @@ namespace TeaChat
 
         private ConferenceCallWindow conf_call_window = null;// = new ConferenceCallWindow();
 
+        public ChatWindow()
+        {
+
+        }
+
         public ChatWindow(List<string> chatFriends, LogInWindow homeWindow)
         {
             InitializeComponent();
             this.Hide();
-            textBoxInCanvas.Width = 100;
-            textBoxInCanvas.Height = 50;
+            textBoxInCanvas.Width = 300;
+            textBoxInCanvas.Height = 200;
             textBoxInCanvas.Background = Brushes.Transparent;
             textBoxInCanvas.BorderBrush = Brushes.Transparent;
             textBoxInCanvas.AcceptsReturn = true;
