@@ -69,6 +69,16 @@ namespace TeaChat
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
+            if (this.textBoxUsername.Text.Length <= 0)
+            {
+                MessageBox.Show("請輸入帳號");
+                return;
+            }
+            if (this.textBoxPassword.Password.Length <= 0)
+            {
+                MessageBox.Show("請輸入密碼");
+                return;
+            }
             if (this.client == null)
             {
                 this.client = ChatSocket.connect(ChatSetting.serverIp);
@@ -97,9 +107,18 @@ namespace TeaChat
 
         private void buttonLogIn_Click(object sender, RoutedEventArgs e)
         {
-            if (textBoxUsername.Text == "")
+            if (this.textBoxUsername.Text.Length <= 0)
+            {
                 MessageBox.Show("請輸入帳號");
-            else if (logIn(textBoxUsername.Text) == false)
+                return;
+            }
+            if (this.textBoxPassword.Password.Length <= 0)
+            {
+                MessageBox.Show("請輸入密碼");
+                return;
+            }
+
+            if (logIn(textBoxUsername.Text) == false)
                 MessageBox.Show("Server沒開");
         }
       
@@ -314,7 +333,9 @@ namespace TeaChat
                 case Packet.Commands.AudioData:
                     byte[] data = new byte[Audio.AudioHandler.AUDIO_DATA_MAX_SIZE];
                     int data_size = packet.GetPacketBody(data);
-                    Dispatcher.BeginInvoke(
+                    try
+                    {
+                        Dispatcher.BeginInvoke(
                         new Action(
                             delegate ()
                             {
@@ -322,6 +343,11 @@ namespace TeaChat
                             }
                         )
                     );
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
                     break;
                 default:
                    // MessageBox.Show("Server傳了未知指令");
