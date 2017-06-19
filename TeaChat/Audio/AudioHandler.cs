@@ -9,6 +9,8 @@ namespace TeaChat.Audio
     /// </summary>
     public class AudioHandler
     {
+        public static readonly int AUDIO_DATA_MAX_SIZE = 8192;
+
         private WaveIn audio_recoder;
 
         private WaveOut audio_player;
@@ -24,6 +26,11 @@ namespace TeaChat.Audio
             // initialize audio recorder
             this.audio_recoder = new WaveIn();
             this.audio_recoder.DataAvailable += new EventHandler<WaveInEventArgs>(this.AudioDataAvailable);
+            this.audio_recoder.WaveFormat = new WaveFormat(
+                32000, 
+                1
+            );
+            this.audio_recoder.BufferMilliseconds = 30;
 
             // initialize output audio data provider for audio data storage
             this.audio_out_provider = new BufferedWaveProvider(this.audio_recoder.WaveFormat);
