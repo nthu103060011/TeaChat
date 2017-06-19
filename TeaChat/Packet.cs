@@ -19,6 +19,8 @@ namespace TeaChat
         public enum Commands
         {
             ReportName,     // string username
+            AccountAuthorized, // valid account
+            AccountInvalid, // invalid account
             UpdateUserList, // List<string> onlineUsers
             ChatRequest,    // List<string> chatFriends
             RegisterChatroom,   // int chatroomIndex, int chatroomIndexOnServer
@@ -182,6 +184,22 @@ namespace TeaChat
             byte[] dataSize = BitConverter.GetBytes(data.Length);
             Array.Copy(dataSize, 0, packet, 2, 4);
             Array.Copy(data, 0, packet, 6, data.Length);
+        }
+
+        public void MakePakcetAccountAuthorized()
+        {
+            ArrayUtility.ZeroByteArray(this.packet);
+
+            packet[0] = (byte)Commands.AccountAuthorized;
+            packet[1] = byte.MaxValue;
+        }
+
+        public void MakePaketAccountInvalid()
+        {
+            ArrayUtility.ZeroByteArray(this.packet);
+
+            packet[0] = (byte)Commands.AccountInvalid;
+            packet[1] = byte.MaxValue;
         }
 
         public void makePacketUpdateUserList(List<string> onlineUsers)
