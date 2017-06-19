@@ -18,6 +18,9 @@ namespace TeaChat
 
         public enum Commands
         {
+            RequestUserRegister, // client user register request
+            UserRegisterAccept, // server user register accpet
+            UserRegisterDeny, // server user register deny
             ReportName,     // string username
             AccountAuthorized, // valid account
             AccountInvalid, // invalid account
@@ -86,6 +89,14 @@ namespace TeaChat
         }
 
         #region getPacketData
+        public string GetUserRegisterData()
+        {
+            byte[] data = new byte[PACKET_MAX_BODY_SIZE];
+            int data_size = this.GetPacketBody(data);
+
+            return Encoding.UTF8.GetString(data);
+        }
+
         public string getReportNameData()
         {
             int dataSize = getDataSize();
@@ -175,6 +186,46 @@ namespace TeaChat
         #endregion
 
         #region makePacket
+
+        public void MakePacketRequestUserRegister(String account)
+        {
+            ArrayUtility.ZeroByteArray(this.packet);
+
+            int packet_size = 0;
+
+            packet[0] = (byte)Commands.RequestUserRegister;
+            packet[1] = byte.MaxValue;
+            packet_size += 2;
+
+            byte[] data = Encoding.UTF8.GetBytes(account);
+            byte[] data_size_bytes = BitConverter.GetBytes(data.Length);
+
+            packet_size += ArrayUtility.CopyByteArray(
+                this.packet, packet_size, 
+                data_size_bytes, 0, data_size_bytes.Length
+            );
+            packet_size += ArrayUtility.CopyByteArray(
+                this.packet, packet_size,
+                data, 0, data.Length
+            );
+        }
+
+        public void MakePacketUserRegisterAccept()
+        {
+            ArrayUtility.ZeroByteArray(this.packet);
+
+            packet[0] = (byte)Commands.UserRegisterDeny;
+            packet[1] = byte.MaxValue;
+        }
+
+        public void MakePacketUserRegisterDeny()
+        {
+            ArrayUtility.ZeroByteArray(this.packet);
+
+            packet[0] = (byte)Commands.UserRegisterAccept;
+            packet[1] = byte.MaxValue;
+        }
+
         public void makePacketReportName(string username)
         {
             packet.Initialize();
