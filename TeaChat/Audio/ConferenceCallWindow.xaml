@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:TeaChat.Audio"
         mc:Ignorable="d"
         Title="Tea Chat" Height="340" Width="280" Closed="Window_Closed" Background="White">
-    <Grid>
+    <Grid Background="#FFC7C6C7">
         <Image x:Name="stateImage" Height="110" Margin="51,120,51,23" Width="110" Visibility="Collapsed"/>
-        <TextBox x:Name="stateTextBox" HorizontalAlignment="Stretch" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Width="128" Margin="0,50,0,0" FontSize="18" FontFamily="Yu Gothic UI Semibold" FontWeight="Bold" TextAlignment="Center" BorderBrush="Transparent"/>
+        <TextBox x:Name="stateTextBox" HorizontalAlignment="Stretch" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Width="128" Margin="0,50,0,0" FontSize="18" FontFamily="Yu Gothic UI Semibold" FontWeight="Bold" TextAlignment="Center" BorderBrush="Transparent" Background="#FFC7C6C7"/>
         <Button x:Name="stateButton" Margin="51,120,51,23" Width="110" Height="110" ClickMode="Press" Click="stateButton_Click" BorderBrush="Transparent" Visibility="Collapsed">
             <Button.Content>
                 <Image Source="Images/to_end.png"/>
