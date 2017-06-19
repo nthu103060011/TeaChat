@@ -66,7 +66,7 @@ namespace TeaChat
             if (textBoxUsername.Text == "")
                 MessageBox.Show("請輸入帳號");
             else if (logIn(textBoxUsername.Text) == false)
-                MessageBox.Show("登入失敗\nServer沒開或帳號錯誤");
+                MessageBox.Show("Server沒開");
         }
       
         private bool logIn(string username)
@@ -85,22 +85,9 @@ namespace TeaChat
                 packet.makePacketReportName(username);
                 sendToServer(null, packet);
 
-                // TODO(可晚點做): 從 server 那邊得到回傳 登入成功或失敗
-                bool logInSuccess = true;
-                //
-
-                if (logInSuccess)
-                {
-                    this.Title = "TeaChat - " + username;
-                    stackPanelLogIn.Visibility = Visibility.Collapsed;
-                    gridHome.Visibility = Visibility.Visible;
-                    
-                    client.newListener(receiveFromServer);
-
-                    return true;
-                }
+                client.newListener(receiveFromServer);
             }
-            return false;
+            return connectSuccess;
         }
 
         private void buttonLogOut_Click(object sender, RoutedEventArgs e)
@@ -168,11 +155,16 @@ namespace TeaChat
                     }));
                     break;
                 case Packet.Commands.AccountAuthorized:
-                    // TODO
+                    Dispatcher.BeginInvoke(new Action(delegate ()
+                    {
+                        this.Title = "TeaChat - " + myName;
+                        stackPanelLogIn.Visibility = Visibility.Collapsed;
+                        gridHome.Visibility = Visibility.Visible;
+                    }));
                     break;
                 case Packet.Commands.AccountInvalid:
-                    // TODO
-                    MessageBox.Show("Invalid Account");
+                    client.close();
+                    MessageBox.Show("帳號錯誤");
                     break;
                 case Packet.Commands.ChatRequest:
                     List<string> chatFriends = packet.getChatRequestData();
