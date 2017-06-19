@@ -63,7 +63,15 @@ namespace TeaChat
                 sendToServer(null, packet);
                 LoginIn = false;
             }
-            client.close();
+            
+            try
+            {
+                client.close();
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.ToString());
+            }
 
             foreach (ChatWindow chatWindow in chatWindows)
                 chatWindow.Close();
@@ -303,66 +311,73 @@ namespace TeaChat
                     }));
                     break;
                 case Packet.Commands.OpenConferenceCall: // peer
-                    try
-                    {
-                        Dispatcher.BeginInvoke(
-                            new Action(
-                                delegate ()
-                                {
-                                    this.chatWindows[chatroomIndex].SetupConferenceCallWindow();
-                                }
-                            )
-                        );
-                        Dispatcher.BeginInvoke(
-                            new Action(
-                                delegate ()
-                                {
-                                    this.chatWindows[chatroomIndex].ConferenceCallConfirmation();
-                                }
-                            )
-                        );
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
-                    break;
-                case Packet.Commands.ConferenceCallOn:
-                    try
-                    {
-                        Dispatcher.BeginInvoke(
+                    Dispatcher.BeginInvoke(
                         new Action(
                             delegate ()
                             {
-                                this.chatWindows[chatroomIndex].ConferenceCallOn();
+                                try
+                                {
+                                    this.chatWindows[chatroomIndex].SetupConferenceCallWindow();
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e.ToString());
+                                }
                             }
                         )
                     );
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
+                    Dispatcher.BeginInvoke(
+                            new Action(
+                                delegate ()
+                                {
+                                    try
+                                    {
+                                        this.chatWindows[chatroomIndex].ConferenceCallConfirmation();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine(e.ToString());
+                                    }
+                                }
+                            )
+                        );
+                    break;
+                case Packet.Commands.ConferenceCallOn:
+                    Dispatcher.BeginInvoke(
+                        new Action(
+                            delegate ()
+                            {
+                                try
+                                {
+                                    this.chatWindows[chatroomIndex].ConferenceCallOn();
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e.ToString());
+                                }
+                            }
+                        )
+                    );
                     //Console.WriteLine("Get conf call on packet");
                     break;
                 case Packet.Commands.AudioData:
                     byte[] data = new byte[Audio.AudioHandler.AUDIO_DATA_MAX_SIZE];
                     int data_size = packet.GetPacketBody(data);
-                    try
-                    {
-                        Dispatcher.BeginInvoke(
+                    Dispatcher.BeginInvoke(
                         new Action(
                             delegate ()
                             {
-                                this.chatWindows[chatroomIndex].PlayAudioData(data, data_size);
+                                try
+                                {
+                                    this.chatWindows[chatroomIndex].PlayAudioData(data, data_size);
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e.ToString());
+                                }
                             }
                         )
                     );
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
                     break;
                 default:
                    // MessageBox.Show("Server傳了未知指令");
