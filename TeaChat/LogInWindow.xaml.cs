@@ -30,7 +30,7 @@ namespace TeaChat
 
         //StrHandler msgHandler;
 
-        private Packet req_packet = new Packet();
+        private Packet req_packet;
 
         List<ChatWindow> chatWindows = new List<ChatWindow>();
 
@@ -45,6 +45,10 @@ namespace TeaChat
             InitializeComponent();
             gridHome.Visibility = Visibility.Collapsed;
             stackPanelLogIn.Visibility = Visibility.Visible;
+
+            this.req_packet = new Packet();
+
+            this.client = ChatSocket.connect(ChatSetting.serverIp);
         }
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -64,6 +68,9 @@ namespace TeaChat
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
+            if (this.req_packet == null)
+                this.req_packet = new Packet();
+
             this.req_packet.MakePacketRequestUserRegister(this.textBoxUsername.Text);
             this.sendToServer(null, this.req_packet);
         }
@@ -82,7 +89,7 @@ namespace TeaChat
             myName = username;
             
             bool connectSuccess;
-            client = ChatSocket.connect(ChatSetting.serverIp);
+            //client = ChatSocket.connect(ChatSetting.serverIp);
             if (client == null) connectSuccess = false;
             else connectSuccess = true;
 
@@ -171,7 +178,7 @@ namespace TeaChat
                     }));
                     break;
                 case Packet.Commands.AccountInvalid:
-                    client.close();
+                    //client.close();
                     MessageBox.Show("帳號錯誤");
                     break;
                 case Packet.Commands.ChatRequest:
@@ -307,7 +314,14 @@ namespace TeaChat
             Console.Write("Send command: "); Console.WriteLine(packet.getCommand());
             Console.Write("Send Chat room num: "); Console.WriteLine(chatroomIndex);
 
-            client.send(dataSand);
+            try
+            {
+                client.send(dataSand);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
     }
 }
