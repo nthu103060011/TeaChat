@@ -76,6 +76,9 @@
       <DependentUpon>LogInWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Packet.cs" />
+    <Compile Include="SetIpWindow.xaml.cs">
+      <DependentUpon>SetIpWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Uitlity\ArrayUtility.cs" />
     <Compile Include="Uitlity\ChatLib.cs" />
     <Compile Include="Window1.xaml.cs">
@@ -101,6 +104,10 @@
       <DependentUpon>ChatWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SetIpWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -40,7 +40,7 @@ namespace TeaChat
 
         public bool LoginIn = false;
 
-        public LogInWindow()
+        public LogInWindow(string serverIp)
         {
             InitializeComponent();
             gridHome.Visibility = Visibility.Collapsed;
@@ -48,7 +48,7 @@ namespace TeaChat
 
             this.req_packet = new Packet();
 
-            this.client = ChatSocket.connect(ChatSetting.serverIp);
+            this.client = ChatSocket.connect(serverIp);
 
             try
             {
